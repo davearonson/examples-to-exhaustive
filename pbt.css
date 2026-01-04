@@ -1,0 +1,75 @@
+:root {
+  --caption-height: 4%;  /* only need 3% if 3x4 rather than 9x16 */
+  --main-height: calc(100% - var(--caption-height));
+}
+
+.reveal {
+
+  a, h1, h2, h3, h4, h5, section {
+    color: #eee;  /* not quite stark white */
+    font-family: "Trebuchet MS", "Helvetica Neue", sans-serif;
+    text-transform: none;  /* else it gets uppercased, yuck! */
+    margin-bottom: 0.05em;
+    margin-top: 0.05em;
+  }
+
+  img {
+    border-radius: 1em;
+    margin: 0;
+    max-height: var(--main-height);
+  }
+
+  div.progress { height: 4px }
+
+  pre {  /* override theme stupidity! */
+    width: auto;
+    code {
+      background: #111;
+      max-height: 100%;
+    }
+  }
+
+
+  section.present {
+    background: #111;  /* not quite stark black */
+    height: 100%;
+
+    &::before {
+      content: "@davearonson";
+      font-size: 0.25em;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+
+    &::after {
+      content: "www.Codosaur.us";
+      font-size: 0.25em;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  span.slide-caption {
+    bottom: 0;
+    font-size: 0.2em;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+
+  /* for debugging */
+  .bordered { border: 1px solid red }
+
+  .centering {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: space-around;
+  }
+
+  .half { height: calc(var(--main-height) * 0.50); }
+  .qtr  { height: calc(var(--main-height) * 0.25); }
+
+}

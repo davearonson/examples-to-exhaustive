@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--
+      Need to look at WHY this doesn't render to PDF properly with
+      the version of Reveal.JS from 2023-04, nor 2025-03,
+      but is fine with 2020-11!
+    -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Property-Based Testing</title>
+
+    <link rel="stylesheet" href="reveal/dist/reset.css">
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/dist/theme/black.css" id="theme">
+    <link rel="stylesheet" href="pbt.css">
+    <link rel="stylesheet" href="reveal/plugin/highlight/monokai.css">
+
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <section>
+          <div class="centering">
+            <div>
+              <h2>From Examples to Exhaustive:</h2>
+              <h3>Intro to Property-Based Testing</h3>
+              <br>
+              <h4>by Dave Aronson</h4>
+              T.Rex-<script>document.write(new Date().getFullYear())</script>@Codosaur.us
+            </div>
+          </div>
+          <aside class="notes">
+            NOTE TO SELF: click on timer to reset it at the start<br>
+          </aside>
+        </section>
+
+        <section>
+          <div class="all">
+            <div class="qtr centering" style="font-size: 1.5em">
+              Guten Tag, Wien!
+            </div>
+            <div class="half centering" style="font-size: 6em">👋</div>
+            <div class="qtr centering" style="font-size: 1.5em">
+              <div>(Hello, Vienna!)</div>
+            </div>
+          </div>
+          <span class="slide-caption">Image: standard emoji</span>
+        </section>
+
+        <section>
+          <div class="qtr centering" style="font-size: 1.5em">
+            Mein Name ist Dave Aronson,
+          </div>
+          <div class="half centering">
+            <img src="images/Dave-Aronson-Speaking-at-JSConf-Hawaii-1kx1k.jpg">
+          </div>
+          <div class="qtr centering" style="font-size: 1.5em">
+            (I'm Dave Aronson,)
+          </div>
+          <span class="slide-caption">Image: me speaking at JSConf Hawai'i 2020!</span>
+        </section>
+
+        <section>
+          <div class="qtr centering" style="font-size: 1.5em">
+            der T-Rex von Codosaurus,
+          </div>
+          <div class="half centering">
+            <img src="images/CodoLogo-from-EPS.png">
+          </div>
+          <div class="qtr centering" style="font-size: 1.5em">
+            (the T. Rex of Codosaurus,)
+          </div>
+          <span class="slide-caption">Image: my company logo!</span>
+        </section>
+
+        <section>
+          <div class="qtr centering" style="font-size: 1.5em">
+            und Ich flog her
+          </div>
+          <div class="half centering" style="font-size: 4em">
+            🛫 . . . 🛬
+          </div>
+          <div class="qtr centering" style="font-size: 1.5em">
+            (and I flew here)
+          </div>
+          <span class="slide-caption">Image: standard emoji</span>
+        </section>
+
+        <section>
+          <div class="qtr centering" style="font-size: 1.5em">
+            auf meinem Pterodaktylus
+          </div>
+          <div class="half">
+            <img src="images/pterodactyl.png" height="60%"
+                                              style="position: absolute; top: 27%; left: 15%">
+            <img src="images/t-rex-light.png" height="35%"
+                                              style="position: absolute; bottom: 43%; right: 35%; border-radius: 0">
+          </div>
+          <div class="qtr centering" style="font-size: 1.5em">
+            (on my pet pterodactyl)
+          </div>
+          <span class="slide-caption">Images: https://pixabay.com/vectors/dinosaur-tyrannosaurus-t-rex-6273164/<br>and https://pixabay.com/vectors/bird-flying-wings-dinosaur-ancient-44859/</span>
+        </section>
+
+        <section>
+          <div class="qtr centering" style="font-size: 1.0em">
+            um Euch Eigenschaftsbasiertes Testen zu zeigen.&nbsp;
+          </div>
+          <div class="half centering">
+            <img src="images/private-property.jpg">
+          </div>
+          <div class="qtr centering" style="font-size: 1.0em">
+            (to teach you about Property Based Testing.)
+          </div>
+          <span class="slide-caption">Image: https://www.publicdomainpictures.net/en/view-image.php?image=84072</span>
+        </section>
+
+        <section>
+          <div class="qtr centering" style="font-size: 1.5em">
+            <div>
+              Jedoch . . .
+            </div>
+          </div>
+          <div class="half centering" style="font-size: 6em">
+            ☝️
+          </div>
+          <div class="qtr centering" style="font-size: 1.5em">
+            (However . . .)
+          </div>
+          <span class="slide-caption">Image: standard emoji</span>
+        </section>
+
+        <section>
+          <div class="qtr centering" style="font-size: 1.5em">
+            auf Englisch.
+          </div>
+          <div class="half centering" style="font-size: 8em">
+            🇺🇸
+          </div>
+          <div class="qtr centering" style="font-size: 1.5em">
+            (in English.)
+          </div>
+          <span class="slide-caption">Image: standard emoji</span>
+          <aside class="notes">
+            Mainly because you’ve just heard almost all the German I speak!
+
+            <br><br>
+
+            So what is Property-Based Testing anyway?&nbsp;
+            You might think it’s the old-fashioned idea that
+            you have to be . . .
+          </aside>
+        </section>
+
+        <section>
+          <img src="images/vote.jpg">
+          <span class="slide-caption">Image: https://www.stockvault.net/photo/253669/election-day-illustration</span>
+          <aside class="notes">
+            . . . a landowner in order to vote, but no, that’s not it.
+
+            Property-Based Testing,
+            which I’m going to refer to from here on as PBT,
+            is a technique that lets you stop writing . . .
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 0.5em">
+            <pre><code>
+def test_this do
+  ...
+end
+
+def test_that do
+  ...
+end
+
+def test_something do
+  ...
+end
+
+def test_whatever do
+  ...
+end
+
+def test_something_else do
+  ...
+end
+
+def test_another_thing do
+  ...
+end
+
+def test_yet_another_thing do
+  ...
+end
+
+def test_one_more_thing do
+  ...
+end
+
+def test_random_thing do
+  ...
+end
+            </code></pre>
+            <pre><code>
+def test_this do
+  ...
+end
+
+def test_that do
+  ...
+end
+
+def test_something do
+  ...
+end
+
+def test_whatever do
+  ...
+end
+
+def test_something_else do
+  ...
+end
+
+def test_another_thing do
+  ...
+end
+
+def test_yet_another_thing do
+  ...
+end
+
+def test_one_more_thing do
+  ...
+end
+
+def test_random_thing do
+  ...
+end
+            </code></pre>
+            <pre><code>
+def test_this do
+  ...
+end
+
+def test_that do
+  ...
+end
+
+def test_something do
+  ...
+end
+
+def test_whatever do
+  ...
+end
+
+def test_something_else do
+  ...
+end
+
+def test_another_thing do
+  ...
+end
+
+def test_yet_another_thing do
+  ...
+end
+
+def test_one_more_thing do
+  ...
+end
+
+def test_random_thing do
+  ...
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+. . . a huge number of tests that are
+identical except that
+they test different examples,
+perhaps expecting different outputs, but maybe not.&nbsp;
+Instead, in PBT, you write . . .
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering">
+            <pre><code>
+def test_domain_1_aspect_1 do
+  ...
+end
+
+def test_domain_1_aspect_2 do
+  ...
+end
+
+def test_domain_2_aspect_1 do
+  ...
+end
+
+def test_domain_2_aspect_2 do
+  ...
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            . . . a small number of tests,
+            and describe the <i>type</i> of examples it applies to,
+            and some desired property of the output,
+            perhaps in relation to the input.&nbsp;
+            It may take multiple such tests to cover
+            the whole domain of valid inputs if there are multiple kinds,
+            or to test all the desired relationships and properties,
+            but sometimes you <i>may</i> be able to write just one test.&nbsp;
+            The PBT framework will . . .
+          </aside>
+        </section>
+
+        <section>
+          <img src="images/dice.jpg">
+          <span class="slide-caption">Image: https://pxhere.com/en/photo/615255</span>
+          <aside class="notes">
+            . . . randomly generate lots of inputs, and examine the outputs.&nbsp;
+            Those of you who have done much work in the security space
+            might be thinking it sounds like . . .
+          </aside>
+        </section>
+
+        <section>
+          <img src="images/fuzzy-dice.jpg">
+          <span class="slide-caption">Image: https://pxhere.com/en/photo/615255</span>
+          <aside class="notes">
+            . . . “fuzzing”, and yes it’s very similar.&nbsp;
+            The difference is mainly in the intent.&nbsp;
+            Fuzzing is mainly for <i>finding</i> the limits of validity,
+            and seeing what happens when you exceed them,
+            while PBT is for when you <i>know</i> the limits of validity
+            (or at least you think you do),
+            and want to verify that the output is correct
+            for all valid inputs --
+            or at least as many of them as you can reasonably sample.
+
+That . . .
+          </aside>
+        </section>
+
+        <section>
+          <img src="images/reduction.png">
+          <span class="slide-caption">Image: https://vectorportal.com/vector/price-reduction-sticker.ai/21963</span>
+          <aside class="notes">
+            . . . reduction in the number of tests
+            is the main advantage it has,
+            over the standard approach of writing a bunch of examples.
+
+            It also . . .
+          </aside>
+        </section>
+
+        <section>
+          <img src="images/mlk.png">
+          <span class="slide-caption">Image: PD, from https://www.thefemalelead.com/post/navigating-gender-bias-in-the-workplace-lessons-from-tackling-racial-bias</span>
+          <aside class="notes">
+            . . . reduces implicit human bias,
+            like how some thing can pass tests with human-scale input numbers,
+            but might blow up or or have errors with something huge.&nbsp;
+
+            For instance, suppose some step in your algorithm involves
+            multiplying two input numbers, that could have any 64-bit value,
+            with the result put into another 64-bit number.&nbsp;
+            It should work fine with numbers that humans are likely to use,
+            up to maybe hundreds.&nbsp;
+            However, it’s quite easy to create a bug in that sort of situation,
+            mainly integer overflow, or underflow.&nbsp;
+            By sampling the rest of the range,
+            PBT can help point out how the term "valid input" . . .
+          </aside>
+        </section>
+
+        <section>
+          <img src="images/inigo-montoya.gif" height="100%">
+          <span class="slide-caption">Image: all over the web!</span>
+          <aside class="notes">
+            . . . doesn't mean what you think it means.&nbsp;
+            This will help you think about your types,
+            especially declaring limitations on the valid ranges.
+
+            Now let’s try an example.&nbsp;
+            Let’s suppose you’re writing tests for
+            everybody's favorite interview whiteboarding classic . . .
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 2em">
+          <pre>
+Is x a . . .   multiple of 3?
+             ____Y_________N__
+multiple  Y | FizzBuzz | Buzz |
+of 5?     N | Fizz     | x    |
+          </pre>
+          </div>
+          <aside class="notes">
+            . . . FizzBuzz.&nbsp;
+            Does anybody need an explanation of FizzBuzz?
+
+            (IF ANYBODY:)
+            I'm not sure how common this is over here,
+            but at least in the USA,
+            this is a children's game,
+            used in schools, to drill the idea of multiples.&nbsp;
+            It starts at 1, usually up to 100,
+            or until only one child remains.&nbsp;
+            Each child in turn says the right thing,
+            as outlined in this table.&nbsp;
+            If the number is a multiple of three but not five,
+            they say Fizz instead of the number.&nbsp;
+            If it's a multiple of five but not three, they say Buzz.&nbsp;
+            If it's a multiple of both, they say FizzBuzz.&nbsp;
+            If it's not a multiple of either, they say the number.&nbsp;
+            So it should start 1, 2, Fizz, 4, Buzz, Fizz, 7, and so on.
+            If they say the wrong thing, they're out.&nbsp;
+            Is that clear enough?
+
+            So let's look at how we would usually test
+            an implementation of this,
+            giving the correct response for a given number input.&nbsp;
+            The typical path would be to test 3, 5, 15,
+            and some number that’s not a multiple of 3 nor 5,
+            let's . . .
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering">
+            <img src="images/xkcd_random_number.png" width="100%">
+          </div>
+          <span class="slide-caption">Image: https://xkcd.com/221/</span>
+          <aside class="notes">
+            . . . randomly pick 4 (USE XKCD SLIDE), and call it a day.&nbsp;
+            But I’m sure we can all think of easy implementations that would
+            give the correct answer for those numbers,
+            but not necessarily for any others, like . . .
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 2em">
+          <pre><code>
+case n
+   3   -> "Fizz"
+   4   -> "4"
+   5   -> "Buzz"
+  15   -> "FizzBuzz"
+  else -> "Garbage!"
+end
+          </code></pre>
+          </div>
+          <aside class="notes">
+            . . . so.&nbsp;
+            Or maybe we’d get a bit more complex,
+            and test 6, 10, 30, and 8.&nbsp;
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 2em">
+          <pre><code>
+case n
+   3,  6 -> "Fizz"
+   4,  8 -> "4"
+   5, 10 -> "Buzz"
+  15, 30 -> "FizzBuzz"
+  else   -> "Garbage!"
+end
+          </code></pre>
+          </div>
+          <aside class="notes">
+            The same applies, no matter what small set of numbers we pick.
+
+            What we really want to do is test that
+            it gives correct answers for all valid input numbers.&nbsp;
+            (Or at least as many as we want to let it test within constraints
+            such as time, CPU cycles, etc.)&nbsp;
+            It would be great if we could divide that input space
+            into easily described sets.&nbsp;
+            Well, we can, just as I did in the explanation of FizzBuzz!&nbsp;
+            The usual valid range of inputs is integers from 1 to 100,
+            but even expanding it to <i>all</i> integers,
+            all of them are either multiples of
+            three but not five, the other way around, both, or neither.&nbsp;
+            We can write <i>just one test</i> for each of these cases,
+            and let our PBT framework decide on a bunch of random inputs.&nbsp;
+            That's already only half the tests we had written for <i>this</i>,
+            without putting much of a serious dent in the input space.
+
+            LEFT OFF HERE
+
+This brings us to the topic of Data Generators.&nbsp;
+(INSERT EXPLANATION)
+
+We can tell our PBT tool what is the definition and the proper response, for each of these.&nbsp;
+In the first three cases, they’re just constant strings, so their property-based tests are very simple: (SHOW TESTS)
+
+In the fourth case though, we have to refer to the input and transform it, from a number to a string.&nbsp;
+Fortunately, the vast majority of tools provide some very easy way to do that, such as letting you declare a variable that the input is assigned to.&nbsp;
+In this case, it looks like this.&nbsp;
+(SHOW TEST)
+
+Now this is a very simple set of tests, so much so that you might complain that we’re effectively mimicking the implementation, and that’s a fair accusation.
+
+So now let’s look at something a bit more complex, one of the canonical examples in PBT: reversing a list.&nbsp;
+We don’t care about how it’s implemented, but we can take advantage of the relationship between the input and output: if you reverse the output, you get the input again.&nbsp;
+So what we can do is, take a random length, make a list of that many random numbers, hold onto the original, run it through our reversal algorithm, and test that if you run the result through the reversal algorithm again, you get the original list, like so: (SHOW TEST)
+
+However, there are many other things one could do that would have the same effect, like negating each number.&nbsp;
+(And in fact we can use this same technique to test a negation function.)  But we can make it at least a little bit harder to fake, by also testing that the first element of the original is the last element of the result, and vice-versa.&nbsp;
+Just as with normal example-based unit tests, we could add that into the existing test, on the excuse that it’s just a sanity check rather than a full-blown test in its own right, or we could make it a separate test.&nbsp;
+We could extend that to checking that the entire list is a reversal of the original, like so.&nbsp;
+(SHOW TEST)  Or, we could use the built-in list reversal function from the language in question, assuming it has one, so that we know THAT step isn’t doing any shenanigans.
+
+. . .
+
+Now, do you really need a PBT tool to do this?  For some things, it makes the setup easier, but any decently experienced programmer should be able to simulate that from scratch, maybe even make a framework for it.&nbsp;
+For instance, here are those FizzBuzz tests, in plain old MiniTest, the test runner that ships with Ruby, set to run some number of times: (SHOW CODE)  And here it is set to run for some number of milliseconds: (SHOW CODE) And here it is with both constraints: (SHOW CODE)
+
+However, the real value of a property-based testing framework is in something much more difficult, called “shrinking”.&nbsp;
+Not quite all tools do this, but the idea is to find the edges, by searching between an input that passes the test, and one that doesn’t, when it finds one.
+
+FizzBuzz has a repeating cycle of 15, but in many other cases, the rules or results change across the domain.&nbsp;
+Let’s look at a simple function that divides 1 by a positive input integer, but first it takes that input, divides it by five, rounds to the nearest integer, and subtracts ten.&nbsp;
+Our output should be a floating point number in the range -1 to 1… but in some range, assuming we haven’t taken steps to avoid it, we’re going to have a division by zero error.&nbsp;
+That’s the range where dividing by five and rounding, gets us ten, in other words, without rounding we get 9.6 to 10.4, in other other words, 96 to 104.&nbsp;
+(SHOW TABLE FROM 95 TO 105)
+
+Suppose our tool successfully does 92, and then tries 104 but of course blows up.&nbsp;
+It figures, if I may anthropomorphize it a bit, that there is probably an edge case somewhere between the two.&nbsp;
+It will basically do a binary search, trying 98, 95, 97, and finally 96.&nbsp;
+Now, having tried 95 and 96, it has two consecutive values where one passes the test but the other blows up.&nbsp;
+Most of the tools will warn us about all the blowups or other test failures, but the important point is it will specifically point out that edge, so that we can adjust our implementation to do something other than blow up, or maybe declare those blowing-up inputs to be invalid.
+
+So is this a silver bullet?  Of course not — Fred Brooks told us back in 1985 that there’s no such thing.&nbsp;
+It’s great for problems where valid inputs can be fairly easily defined in such a way that they can be created randomly, and the relationship to the output is easy to check, but it’s not so great for things with heavy side effects or lots of stored state.&nbsp;
+However, lots of at least parts of such complex problems can be broken down into suitable ones, with some effort.&nbsp;
+INSERT EXAMPLE
+
+INSERT HISTORY?
+
+Where to fit it into process
+
+If you’d like to try PBT for yourself, here’s a list of tools for some popular languages: (SHOW LIST)
+
+More ideas:
+
+* Tips for writing effective properties
+* Common pitfalls and how to avoid them
+          </aside>
+        </section>
+
+
+      </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/markdown/markdown.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      const ratio = 9/16;
+      const width = 960;
+      Reveal.initialize({
+        controls: false,
+        hash: true,
+        history: true,
+        progress: true,
+        transition: "none",
+        transitionSpeed: "fast",
+        width: width,
+        height: width * ratio,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+      });
+      // Uncomment one of the next two config lines
+      // ONLY WHEN FORMATTING TO PRINT, w/ ?print-pdf
+      // (and remember to include background graphics to get dark page bg)
+      // Reveal.configure({ pdfMaxPagesPerSlide: 1, showNotes: false });
+      // Reveal.configure({ pdfMaxPagesPerSlide: 1, showNotes: 'separate-page' });
+    </script>
+  </body>
+</html>
