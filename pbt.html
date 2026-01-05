@@ -38,14 +38,12 @@
         </section>
 
         <section>
-          <div class="all">
-            <div class="qtr centering" style="font-size: 1.5em">
-              Guten Tag, Wien!
-            </div>
-            <div class="half centering" style="font-size: 6em">👋</div>
-            <div class="qtr centering" style="font-size: 1.5em">
-              <div>(Hello, Vienna!)</div>
-            </div>
+          <div class="qtr centering" style="font-size: 1.5em">
+            Guten Tag, Wien!
+          </div>
+          <div class="half centering" style="font-size: 6em">👋</div>
+          <div class="qtr centering" style="font-size: 1.5em">
+            <div>(Hello, Vienna!)</div>
           </div>
           <span class="slide-caption">Image: standard emoji</span>
         </section>
@@ -169,114 +167,114 @@
 
         <section>
           <div class="centering" style="font-size: 0.5em">
-            <pre><code>
-def test_this do
+            <pre><code class="language-ruby">
+def test_this_1
   ...
 end
 
-def test_that do
+def test_that_1
   ...
 end
 
-def test_something do
+def test_something_1
   ...
 end
 
-def test_whatever do
+def test_whatever_1
   ...
 end
 
-def test_something_else do
+def test_something_else_1
   ...
 end
 
-def test_another_thing do
+def test_another_thing_1
   ...
 end
 
-def test_yet_another_thing do
+def test_yet_another_thing_1
   ...
 end
 
-def test_one_more_thing do
+def test_one_more_thing_1
   ...
 end
 
-def test_random_thing do
+def test_random_thing_1
   ...
 end
             </code></pre>
-            <pre><code>
-def test_this do
+            <pre><code class="language-ruby">
+def test_this_2
   ...
 end
 
-def test_that do
+def test_that_2
   ...
 end
 
-def test_something do
+def test_something_2
   ...
 end
 
-def test_whatever do
+def test_whatever_2
   ...
 end
 
-def test_something_else do
+def test_something_else_2
   ...
 end
 
-def test_another_thing do
+def test_another_thing_2
   ...
 end
 
-def test_yet_another_thing do
+def test_yet_another_thing_2
   ...
 end
 
-def test_one_more_thing do
+def test_one_more_thing_2
   ...
 end
 
-def test_random_thing do
+def test_random_thing_2
   ...
 end
             </code></pre>
-            <pre><code>
-def test_this do
+            <pre><code class="language-ruby">
+def test_this_3
   ...
 end
 
-def test_that do
+def test_that_3
   ...
 end
 
-def test_something do
+def test_something_3
   ...
 end
 
-def test_whatever do
+def test_whatever_3
   ...
 end
 
-def test_something_else do
+def test_something_else_3
   ...
 end
 
-def test_another_thing do
+def test_another_thing_3
   ...
 end
 
-def test_yet_another_thing do
+def test_yet_another_thing_3
   ...
 end
 
-def test_one_more_thing do
+def test_one_more_thing_3
   ...
 end
 
-def test_random_thing do
+def test_random_thing_3
   ...
 end
             </code></pre>
@@ -292,20 +290,20 @@ Instead, in PBT, you write . . .
 
         <section>
           <div class="centering">
-            <pre><code>
-def test_domain_1_aspect_1 do
+            <pre><code class="language-ruby">
+def test_domain_1_aspect_1
   ...
 end
 
-def test_domain_1_aspect_2 do
+def test_domain_1_aspect_2
   ...
 end
 
-def test_domain_2_aspect_1 do
+def test_domain_2_aspect_1
   ...
 end
 
-def test_domain_2_aspect_2 do
+def test_domain_2_aspect_2
   ...
 end
             </code></pre>
@@ -399,12 +397,12 @@ That . . .
 
         <section>
           <div class="centering" style="font-size: 2em">
-          <pre>
+            <pre>
 Is x a . . .   multiple of 3?
              ____Y_________N__
 multiple  Y | FizzBuzz | Buzz |
 of 5?     N | Fizz     | x    |
-          </pre>
+            </pre>
           </div>
           <aside class="notes">
             . . . FizzBuzz.&nbsp;
@@ -452,15 +450,15 @@ of 5?     N | Fizz     | x    |
 
         <section>
           <div class="centering" style="font-size: 2em">
-          <pre><code>
-case n
-   3   -> "Fizz"
-   4   -> "4"
-   5   -> "Buzz"
-  15   -> "FizzBuzz"
-  else -> "Garbage!"
+            <pre><code class="language-ruby">
+case number
+  when  3 then "Fizz"
+  when  4 then "4"
+  when  5 then "Buzz"
+  when 15 then "FizzBuzz"
+  else         "Garbage!"
 end
-          </code></pre>
+            </code></pre>
           </div>
           <aside class="notes">
             . . . so.&nbsp;
@@ -471,15 +469,15 @@ end
 
         <section>
           <div class="centering" style="font-size: 2em">
-          <pre><code>
-case n
-   3,  6 -> "Fizz"
-   4,  8 -> "4"
-   5, 10 -> "Buzz"
-  15, 30 -> "FizzBuzz"
-  else   -> "Garbage!"
+            <pre><code class="language-ruby">
+case number
+  when  3,  6 then "Fizz"
+  when  4,  8 then "4"
+  when  5, 10 then "Buzz"
+  when 15, 30 then "FizzBuzz"
+  else             "Garbage!"
 end
-          </code></pre>
+            </code></pre>
           </div>
           <aside class="notes">
             The same applies, no matter what small set of numbers we pick.
@@ -490,20 +488,122 @@ end
             such as time, CPU cycles, etc.)&nbsp;
             It would be great if we could divide that input space
             into easily described sets.&nbsp;
-            Well, we can, just as I did in the explanation of FizzBuzz!&nbsp;
+            Well, we can, just as I did a few slides ago!&nbsp;
             The usual valid range of inputs is integers from 1 to 100,
             but even expanding it to <i>all</i> integers,
-            all of them are either multiples of
-            three but not five, the other way around, both, or neither.&nbsp;
-            We can write <i>just one test</i> for each of these cases,
-            and let our PBT framework decide on a bunch of random inputs.&nbsp;
+            all of them are either multiples of three but not five,
+            the other way around, both, or neither.&nbsp;
+            We can write <i>just one test</i> for each of these four cases,
+            let our PBT framework create random inputs,
+            let it run for some reasonable amount of
+            time or iterations or whatever,
+            and have very strong confidence that we've
+            tested a significant sampling of the input space.&nbsp;
             That's already only half the tests we had written for <i>this</i>,
             without putting much of a serious dent in the input space.
 
-            LEFT OFF HERE
+            So how <i>do</i> we write a test for such an entire <i>case</i>,
+            not just one number,
+            especially without violating the testing principle of
+            "one assertion per test"?&nbsp;
+            With most frameworks, it's very similar to . . .
+          </aside>
+        </section>
 
-This brings us to the topic of Data Generators.&nbsp;
-(INSERT EXPLANATION)
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_6_is_fizz
+  expected = 'Fizz'
+  actual = fizzbuzz(6)
+  assert(actual == expected)
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            . . . writing one example-based test,
+            except that they may . . .
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_mult_of_3_not_5_is_fizz(number)
+  expected = 'Fizz'
+  actual = fizzbuzz(number)
+  assert(actual == expected)
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            . . . accept the number as a parameter, or . . .
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_mult_of_3_not_5_is_fizz
+  number = generate_mult_of_3_not_5()
+  expected = 'Fizz'
+  actual = fizzbuzz(number)
+  assert(actual == expected)
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            . . . have you call a generator to get the number
+            (and we'll talk soon about those).&nbsp;
+            The other main difference is that there is usually some way to
+            tell the framework how long to keep running the test,
+            such as a number of milliseconds, or iterations, or whatever.
+
+            So what's . . .
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering">
+            <img src="images/generator.png">
+          </div>
+          <span class="slide-caption">Image: https://openclipart.org/detail/335427/portable-generator</span>
+          <aside class="notes">
+            . . . a generator?&nbsp;
+            A generator is a function to
+            randomly generate valid test data.&nbsp;
+            They can be primitives like in this case,
+            slightly more complex things like lists,
+            or even custom things, such as
+            objects (or records or maps or whatever your language calls them).&nbsp;
+            Usually this is where you would incorporate constraints, such as
+            "give me an integer, not just any integer, but
+            one from 1 to 100, inclusive, that is
+            a multiple of three, but not of five".&nbsp;
+            That might look like this:
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+MAX_VALUE = 100
+
+def generate_mult_of_3_not_5
+  candidate = (random(MAX_VALUE/3) + 1) * 3
+  if candidate % 5 == 0
+    return generate_mult_of_3_not_5
+  else
+    return candidate
+  end
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            We could complicate the code by making a multiple of fifteen,
+            then adding some number between 1 and 14 that's not 5 or 10,
+            but this is simpler, I trust you get the idea.
+
 
 We can tell our PBT tool what is the definition and the proper response, for each of these.&nbsp;
 In the first three cases, they’re just constant strings, so their property-based tests are very simple: (SHOW TESTS)
@@ -559,6 +659,7 @@ If you’d like to try PBT for yourself, here’s a list of tools for some popul
 More ideas:
 
 * Tips for writing effective properties
+(see https://fsharpforfunandprofit.com/posts/property-based-testing-2/)
 * Common pitfalls and how to avoid them
           </aside>
         </section>
