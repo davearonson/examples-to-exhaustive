@@ -50,57 +50,15 @@
 
         <section>
           <div class="qtr centering" style="font-size: 1.5em">
-            Mein Name ist Dave Aronson,
+            Ich bin Dave Aronson, und hier
           </div>
           <div class="half centering">
             <img src="images/Dave-Aronson-Speaking-at-JSConf-Hawaii-1kx1k.jpg">
           </div>
           <div class="qtr centering" style="font-size: 1.5em">
-            (I'm Dave Aronson,)
+            (I'm Dave Aronson, here)
           </div>
           <span class="slide-caption">Image: me speaking at JSConf Hawai'i 2020!</span>
-        </section>
-
-        <section>
-          <div class="qtr centering" style="font-size: 1.5em">
-            der T-Rex von Codosaurus,
-          </div>
-          <div class="half centering">
-            <img src="images/CodoLogo-from-EPS.png">
-          </div>
-          <div class="qtr centering" style="font-size: 1.5em">
-            (the T. Rex of Codosaurus,)
-          </div>
-          <span class="slide-caption">Image: my company logo!</span>
-        </section>
-
-        <section>
-          <div class="qtr centering" style="font-size: 1.5em">
-            und Ich flog her
-          </div>
-          <div class="half centering" style="font-size: 4em">
-            🛫 . . . 🛬
-          </div>
-          <div class="qtr centering" style="font-size: 1.5em">
-            (and I flew here)
-          </div>
-          <span class="slide-caption">Image: standard emoji</span>
-        </section>
-
-        <section>
-          <div class="qtr centering" style="font-size: 1.5em">
-            auf meinem Pterodaktylus
-          </div>
-          <div class="half">
-            <img src="images/pterodactyl.png" height="60%"
-                                              style="position: absolute; top: 27%; left: 15%">
-            <img src="images/t-rex-light.png" height="35%"
-                                              style="position: absolute; bottom: 43%; right: 35%; border-radius: 0">
-          </div>
-          <div class="qtr centering" style="font-size: 1.5em">
-            (on my pet pterodactyl)
-          </div>
-          <span class="slide-caption">Images: https://pixabay.com/vectors/dinosaur-tyrannosaurus-t-rex-6273164/<br>and https://pixabay.com/vectors/bird-flying-wings-dinosaur-ancient-44859/</span>
         </section>
 
         <section>
@@ -143,11 +101,7 @@
           </div>
           <span class="slide-caption">Image: standard emoji</span>
           <aside class="notes">
-            Mainly because you’ve just heard almost all the German I speak!
-
-            <br><br>
-
-            So what is Property-Based Testing anyway?&nbsp;
+            So what <i>is</i> Property-Based Testing?&nbsp;
             You might think it’s the old-fashioned idea that
             you have to be . . .
           </aside>
@@ -358,18 +312,19 @@ That . . .
             is the main advantage it has,
             over the standard approach of writing a bunch of examples.
 
-            It also . . .
+            It also reduces implicit human . . .
           </aside>
         </section>
 
         <section>
-          <img src="images/mlk.png">
+          <img src="images/sampling-bias.png">
           <span class="slide-caption">Image: PD, from https://www.thefemalelead.com/post/navigating-gender-bias-in-the-workplace-lessons-from-tackling-racial-bias</span>
           <aside class="notes">
-            . . . reduces implicit human bias,
+            . . . bias,
             like how some thing can pass tests with human-scale input numbers,
             but might blow up or or have errors with something huge.&nbsp;
 
+            <!--
             For instance, suppose some step in your algorithm involves
             multiplying two input numbers, that could have any 64-bit value,
             with the result put into another 64-bit number.&nbsp;
@@ -377,6 +332,7 @@ That . . .
             up to maybe hundreds or thousands.&nbsp;
             However, it’s quite easy to create a bug in that sort of situation,
             mainly integer overflow, or underflow.&nbsp;
+            -->
             By sampling the rest of the range,
             PBT can help point out how the term "valid input" . . .
           </aside>
@@ -523,22 +479,7 @@ end
           </div>
           <aside class="notes">
             . . . writing one example-based test,
-            except that they may . . .
-          </aside>
-        </section>
-
-        <section>
-          <div class="centering" style="font-size: 1.5em">
-            <pre><code class="language-ruby">
-def test_mult_of_3_not_5_is_fizz(number)
-  expected = 'Fizz'
-  actual = fizzbuzz(number)
-  assert(actual == expected)
-end
-            </code></pre>
-          </div>
-          <aside class="notes">
-            . . . accept the number as a parameter, or . . .
+            except that . . .
           </aside>
         </section>
 
@@ -554,7 +495,7 @@ end
             </code></pre>
           </div>
           <aside class="notes">
-            . . . have you call a generator to get the number
+            . . . you usually call a generator to get the number
             (and we'll talk soon about those).&nbsp;
             The other main difference is that there is usually some way to
             tell the framework how long to keep running the test,
@@ -605,33 +546,169 @@ end
             then adding some number between 1 and 14 that's not 5 or 10,
             but this is simpler, I trust you get the idea.
 
+            We can tell our PBT tool what is the definition
+            and the proper response, for each of these.&nbsp;
+            In the first three cases, they’re just constant strings,
+            so their property-based tests are very simple:
+          </aside>
+        </section>
 
-We can tell our PBT tool what is the definition and the proper response, for each of these.&nbsp;
-In the first three cases, they’re just constant strings, so their property-based tests are very simple: (SHOW TESTS)
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_mult_of_3_not_5_is_fizz
+  number = generate_mult_of_3_not_5()
+  assert(fizzbuzz(number) == 'Fizz')
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            This is a shortened version of
+            the test that I showed you a few slides back,
+            for numbers that are multiples of three but not five.
+          </aside>
+        </section>
 
-In the fourth case though, we have to refer to the input and transform it, from a number to a string.&nbsp;
-Fortunately, the vast majority of tools provide some very easy way to do that, such as letting you declare a variable that the input is assigned to.&nbsp;
-In this case, it looks like this.&nbsp;
-(SHOW TEST)
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_mult_of_5_not_3_is_buzz
+  number = generate_mult_of_5_not_3()
+  assert(fizzbuzz(number) == 'Buzz')
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            This would be the opposite case,
+            multiples of five but not three.
+          </aside>
+        </section>
 
-Now this is a very simple set of tests, so much so that you might complain that we’re effectively mimicking the implementation, and that’s a fair accusation.
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_mult_of_15_is_fizzbuzz
+  number = generate_mult_of_15()
+  assert(fizzbuzz(number) == 'Fizzbuzz')
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            And this would be for multiples of fifteen.
+          </aside>
+        </section>
 
-So now let’s look at something a bit more complex, one of the canonical examples in PBT: reversing a list.&nbsp;
-We don’t care about how it’s implemented, but we can take advantage of the relationship between the input and output: if you reverse the output, you get the input again.&nbsp;
-So what we can do is, take a random length, make a list of that many random numbers, hold onto the original, run it through our reversal algorithm, and test that if you run the result through the reversal algorithm again, you get the original list, like so: (SHOW TEST)
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_mult_of_neither_is_number
+  number = generate_non_mult_of_3_and_5()
+  assert(fizzbuzz(number) == number.to_string)
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            In the fourth case though, we have to transform the input
+            from a number to a string.&nbsp;
+            Not at all a big deal.
 
-However, there are many other things one could do that would have the same effect, like negating each number.&nbsp;
-(And in fact we can use this same technique to test a negation function.)  But we can make it at least a little bit harder to fake, by also testing that the first element of the original is the last element of the result, and vice-versa.&nbsp;
-Just as with normal example-based unit tests, we could add that into the existing test, on the excuse that it’s just a sanity check rather than a full-blown test in its own right, or we could make it a separate test.&nbsp;
-We could extend that to checking that the entire list is a reversal of the original, like so.&nbsp;
-(SHOW TEST)  Or, we could use the built-in list reversal function from the language in question, assuming it has one, so that we know THAT step isn’t doing any shenanigans.
+            <br><br>
 
+            So here we see that using property-based tests,
+            we can write just four tests,
+            and have very strong sampling of the input space,
+            as opposed to writing lots of examples.
+
+            <br><br>
+
+            Now this is a very simple set of tests,
+            so much so that you might complain that
+            we’re effectively mimicking the implementation,
+            and that’s a fair accusation.&nbsp;
+            So now let’s look at something a bit more complex,
+            one of the canonical examples in PBT: reversing a list.&nbsp;
+            We don’t care about how it’s implemented,
+            but we can take advantage of the relationship
+            between the input and output:
+            if you reverse the output, you get the input again.&nbsp;
+            So what we can do is:
+
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def generate_random_list(max_len, max_val)
+  len = random(max_len)
+  return [1..len].map { random(max_val) }
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            first write a generator to make up a random length,
+            and return a list of that many random numbers.
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_reverse_reverses
+  original = generate_random_list(10, 10)
+  reversed = my_reverse(original)
+  reversed_twice = my_reverse(reversed)
+  assert reversed_twice == original
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            In our test we can call the generator,
+            hold onto what it gives us,
+            run it through our reversal algorithm,
+            and test that if you run the result
+            through the reversal algorithm again,
+            you get the original list.
+
+            <br><br>
+
+            However, there are many other things one could do
+            that would have the same effect,
+            like negating each number.&nbsp;
+            (And in fact we can use this same technique
+            to test a negation function.)&nbsp;
+            But we can make it at least a little bit harder to fake,
+            by also
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_reverse_swaps_first_and_last
+  original = generate_random_list(10, 10)
+  reversed = my_reverse(original)
+  assert reversed.first == original.last
+  assert reversed.last == original.first
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            testing that
+            the first element of the original
+            is the last element of the result,
+            and vice-versa.&nbsp;
+            Yes, this may occasionally pass with an incorrect algorithm,
+            but that's why we test several different aspects
+            of the functionality, and many repetitions.
+
+            <!--
 . . .
 
-Now, do you really need a PBT tool to do this?  For some things, it makes the setup easier, but any decently experienced programmer should be able to simulate that from scratch, maybe even make a framework for it.&nbsp;
+Now, do you really need a PBT tool to do this?  For some things, it makes the setup easier, but any decently experienced programmer should be able to simulate that from scratch, maybe even make their own framework for it.&nbsp;
 For instance, here are those FizzBuzz tests, in plain old MiniTest, the test runner that ships with Ruby, set to run some number of times: (SHOW CODE)  And here it is set to run for some number of milliseconds: (SHOW CODE) And here it is with both constraints: (SHOW CODE)
 
-However, the real value of a property-based testing framework is in something much more difficult, called “shrinking”.&nbsp;
+However, the real magic of a property-based testing framework is in something much more difficult, called “shrinking”.&nbsp;
 Not quite all tools do this, but the idea is to find the edges, by searching between an input that passes the test, and one that doesn’t, when it finds one.
 
 FizzBuzz has a repeating cycle of 15, but in many other cases, the rules or results change across the domain.&nbsp;
@@ -662,6 +739,7 @@ More ideas:
 * Tips for writing effective properties
 (see https://fsharpforfunandprofit.com/posts/property-based-testing-2/)
 * Common pitfalls and how to avoid them
+        -->
           </aside>
         </section>
 
