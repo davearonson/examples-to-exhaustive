@@ -59,6 +59,12 @@
     width: 100%;
   }
 
+  table td {
+    border: 0;
+    padding: 0.1em .5em;
+  }
+
+
   /* for debugging */
   .bordered { border: 1px solid red }
 
