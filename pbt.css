@@ -64,6 +64,7 @@
     padding: 0.1em .5em;
   }
 
+  .all  { height: var(--main-height); }
 
   /* for debugging */
   .bordered { border: 1px solid red }
