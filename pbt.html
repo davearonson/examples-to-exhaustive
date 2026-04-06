@@ -865,11 +865,197 @@ end
             and vice-versa.&nbsp;
             Yes, this may occasionally pass with an incorrect algorithm,
             but that's why we test several different aspects
-            of the functionality, and many repetitions.
+            of the functionality, and many repetitions.<br><br>
 
-            <br><br>
+            Sometimes it can be hard to find and encapsulate good properties,
+            but there are some useful guidelines.&nbsp;
+            Scott Wlaschin made
+          </aside>
+        </section>
 
-            Now, do you really need a PBT tool to do this?&nbsp;
+        <section>
+          <div class="centering" style="font-size: 0.9em">
+            <div>
+              Scott Wlaschin's Seven Kinds of Properties:
+              <ul>
+                <li>Different paths, same destination</li>
+                <li>There and back again</li>
+                <li>Some things never change</li>
+                <li>The more things change,<br>
+                  the more they stay the same</li>
+                <li>Solve a smaller problem first</li>
+                <li>Hard to prove, easy to verify</li>
+                <li>The test oracle</li>
+              </ul>
+              <div>
+              </div>
+              <aside class="notes">
+                a list of seven approaches.&nbsp;
+                The graphics on the following slides are
+                shamelessly stolen from his post titled
+                "Choosing properties for property-based testing"
+                on his blog at FSharpForFunAndProfit.com.
+              </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1em">
+            <div style="width: 80%">
+              Different paths, same destination<br><br>
+              <img src="images/different-paths.png" width="100%">
+            </div>
+          </div>
+          <span class="slide-caption">Image: from https://fsharpforfunandprofit.com/posts/property-based-testing-2/</span>
+          <aside class="notes">
+            "Different paths, same destination" is about
+            doing operations in a different order,
+            but getting the same result.&nbsp;
+            It's very useful when it's the same or related operations,
+            like addition and subtraction,
+            or division and multiplication,
+            so that the order doesn't actually matter,
+            or in math terms it's <i>commutative</i>.&nbsp;
+            For instance, multiplying by 10 and then dividing by 3
+            gets you the same result as
+            dividing by 3 and then multiplying by 10...
+            at least ignoring floating-point problems.
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1em">
+            <div style="width: 80%">
+              There and back again<br><br>
+              <img src="images/there-and-back.png" width="100%">
+            </div>
+          </div>
+          <span class="slide-caption">Image: from https://fsharpforfunandprofit.com/posts/property-based-testing-2/</span>
+          <aside class="notes">
+            "There and back again" is about
+            combining an operation with the inverse operation,
+            so that you get the original value.&nbsp;
+            For instance, add and subtract, multiply and divide,
+            and even setting and then verifying some value,
+            like writing a value to disk and reading it back,
+            using a setter and a getter on a property of an object,
+            or serialization and deserialization.&nbsp;
+            Sometimes an operation <i>is</i> its own inverse,
+            such as reversing a list or negating a number,
+            as mentioned earlier.
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1em">
+            <div style="width: 80%">
+              Some things never change<br><br>
+              <img src="images/never-change.png" width="100%">
+            </div>
+          </div>
+          <span class="slide-caption">Image: from https://fsharpforfunandprofit.com/posts/property-based-testing-2/</span>
+          <aside class="notes">
+            "Some things never change" is about
+            invariants that are perserved through a transformation.&nbsp;
+            For instance, when we sort a list,
+            its size and members are preserved, only their order changes.
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1em">
+            <div style="width: 80%">
+              The more things change,<br>
+              the more they stay the same<br><br>
+              <img src="images/more-change.png" width="100%">
+            </div>
+          </div>
+          <span class="slide-caption">Image: from https://fsharpforfunandprofit.com/posts/property-based-testing-2/</span>
+          <aside class="notes">
+            "The more things change, the more they stay the same" is about
+            idempotence, the idea that
+            an operation can be applied multiple times
+            and the result will always be the same as the first time.&nbsp;
+            The example he gives is selecting the distinct members of a list,
+            but it is a useful principle in programming,
+            to make sure that a loop run amok doesn't do too much damage.&nbsp;
+            It's particularly important in message and event processing,
+            in which an item may be processed more than once.
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1em">
+            <div style="width: 80%">
+              Solve a smaller problem first<br><br>
+              <img src="images/smaller-problem.png" width="100%">
+            </div>
+          </div>
+          <span class="slide-caption">Image: from https://fsharpforfunandprofit.com/posts/property-based-testing-2/</span>
+          <aside class="notes">
+            "Solve a smaller problem first" is about
+            the logical principle of induction --
+            if you can prove some idea about a smaller piece,
+            and prove that adding onto it doesn't break the idea,
+            you can prove it about the whole thing, by induction.&nbsp;
+            This is very useful for recursive structures like lists and trees.
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1em">
+            <div style="width: 80%">
+              Hard to prove, easy to verify<br><br>
+              <img src="images/hard-to-prove.png" width="100%">
+            </div>
+          </div>
+          <span class="slide-caption">Image: from https://fsharpforfunandprofit.com/posts/property-based-testing-2/</span>
+          <aside class="notes">
+            "Hard to prove, easy to verify" is I think a bit misnamed,
+            and should really be "Hard to <i>solve</i>, easy to verify".&nbsp;
+            In this formulation, it should sound familiar to the theory geeks,
+            as this is this basis of the whole debate over whether P = NP,
+            and no I'm not going to delve into that further.&nbsp;
+            The idea behind this is that the function we're testing
+            may be very hairy and take a long time,
+            but it may be very quick to verify that it worked,
+            such as in this example verifying that the route it found
+            does indeed get from the start to the end of the maze.&nbsp;
+            The goal is that the verification is fast enough to use in a test,
+            ideally one executed many many times,
+            as is very common in property-based testing.
+            
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1em">
+            <div style="width: 80%">
+              The test oracle<br><br>
+              <img src="images/test-oracle.png" width="100%">
+            </div>
+          </div>
+          <span class="slide-caption">Image: from https://fsharpforfunandprofit.com/posts/property-based-testing-2/</span>
+          <aside class="notes">
+            "The test oracle" is about comparing
+            two ways of doing something.&nbsp;
+            This is particularly useful when you're changing
+            from one algorithm, that we know works,
+            to another, that we are implementing.&nbsp;
+            This could be a small bit of internals,
+            or a whole feature, like in the Strangler Fig pattern,
+            or indeed the entire system.&nbsp;
+            We get a result from the one we know works,
+            and see if the new one comes up with the same answer.<br><br>
+
+            Now, do you really need a PBT
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering"><img src="images/tools.webp"></div>
+          <span class="slide-caption">Image: https://easy-peasy.ai/ai-image-generator/images/electrician-toolkit-20-essential-tools-hd</span>
+          <aside class="notes">
+            tool to do this?&nbsp;
             For some things, it makes the setup easier,
             but any decently experienced programmer should be able to
             write that from scratch,
@@ -1048,15 +1234,6 @@ end
             leave as many properties as possible empty,
             or filled in with default values.<br><br>
 
-            <!--
-
-            Now you may be wondering, that's all well and good for integers,
-            but what about floating point numbers, where the concept of
-            "numbers right next to each other" is much fuzzier?&nbsp;
-            Or more complex items like lists and records and so on?&nbsp;
-            <br><br>
-            -->
-
             Now that we see how much work this saves us,
             who deserves the
           </aside>
@@ -1229,8 +1406,6 @@ end
             which seems to be sort of
             a cross between a PBT tool and Chaos Monkey,
             for distributed systems.&nbsp;
-            Lastly, if this sort of randomized bug-hunting appeals to you,
-            I also recommend you check out
           </aside>
         </section>
 
@@ -1243,6 +1418,8 @@ end
           </div>
           <span class="slide-caption">Images: https://pixabay.com/en/genetic-modification-mutant-mutation-549889/ and my Tight Genes presentation</span>
           <aside class="notes">
+            Lastly, if this sort of randomized bug-hunting appeals to you,
+            I also recommend you check out
             Mutation Testing, and maybe Genetic Algorithms,
             two of my other frequent presentation topics.&nbsp;
             Mutation Testing shares with Property Based Testing
@@ -1274,7 +1451,6 @@ end
               linkedin.com/in/DaveAronson<br>
               Slides Repo:<br>
               github.com/DaveAronson/Examples-to-Exhaustive
-              
             </div>
           </div>
           <aside class="notes">
