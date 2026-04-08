@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <!--
-      NEED TO ADD STUFF; have ~29 mins of mat'l, want 40-45!
+      NEED TO ADD STUFF; have ~35 mins of mat'l, want 40-45!
 
       More ideas:
 
@@ -10,8 +10,6 @@
       https://www.slideshare.net/slideshow/an-introduction-to-property-based-testing/49224559
       (including automatic use of correct generator)
 
-      * Tips for writing effective properties
-      (see https://fsharpforfunandprofit.com/posts/property-based-testing-2/)
       * Common pitfalls and how to avoid them
 
       Need to look at WHY this doesn't render to PDF properly with
@@ -39,7 +37,7 @@
 
         <section>
           <div class="centering">
-            <div class="all">
+            <div>
               <h2>From Examples to Exhaustive:</h2>
               <h3>Intro to Property-Based Testing</h3>
               <br>
@@ -541,7 +539,7 @@ end
             within constraints such as time, CPU cycles, etc.)&nbsp;
             It would be great if we could divide that input space
             into easily described sets.&nbsp;
-            Well, we can, just as I did four slides ago!&nbsp;
+            Well, we can, just as I did five slides ago!&nbsp;
             The usual valid range of inputs is integers from 1 to 100,
             but even expanding it to <i>all</i> integers, even negative ones,
             all of them are either multiples of three but not five,
@@ -568,7 +566,7 @@ end
         </section>
 
         <section>
-          <div class="centering" style="font-size: 1.5em">
+          <div class="centering" style="font-size: 2em">
             <pre><code class="language-ruby">
 def test_6_is_fizz
   expected = "Fizz"
