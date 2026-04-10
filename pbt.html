@@ -127,7 +127,7 @@
           <aside class="notes">
             . . . a landowner in order to vote, but no, that’s not it.
 
-            Property-Based Testing, or PBT,
+            Property-Based Testing, often shortened to PBT,
             is a technique that lets you stop writing . . .
           </aside>
         </section>
@@ -249,9 +249,10 @@ end
           <aside class="notes">
 . . . a huge number of tests that are
 identical except that
-they test different examples.&nbsp;
+they test different examples,
+what's usually called <i>example</i>-based testing.&nbsp;
 Maybe they're expecting different outputs, but maybe not.&nbsp;
-Instead, in PBT, you write . . .
+Instead, in <i>property</i>-based testing, you write . . .
           </aside>
         </section>
 
@@ -283,11 +284,14 @@ end
             It may take multiple such tests to cover
             the whole domain of valid inputs if there are multiple kinds,
             or to test all the desired relationships and properties,
-            but almost certainly
-            fewer tests than in an example-based approach.&nbsp;
+            but almost always 
+            many fewer tests than in an example-based approach.&nbsp;
             In fact, sometimes you <i>may</i> be able to
             write just one test.&nbsp;
-            The PBT framework will . . .
+            The PBT tool,
+            which may be a library or a framework,
+            so from here on I'm just going to say tool,
+            will . . .
           </aside>
         </section>
 
@@ -297,7 +301,7 @@ end
           <aside class="notes">
             . . . randomly generate lots of inputs, and examine the outputs.&nbsp;
             Those of you who have done much work in the security space
-            might be thinking it sounds like . . .
+            might be thinking it sounds somewhat like . . .
           </aside>
         </section>
 
@@ -310,12 +314,13 @@ end
             . . . “fuzzing”, and yes it’s very similar.&nbsp;
             In fact, the core of one of the major PBT tools, Hypothesis,
             is a fuzzing library, Conjecture.&nbsp;
-            The difference is mainly in the intent.&nbsp;
+            The difference is mainly in the <i>intent</i>.&nbsp;
             Fuzzing is mainly for <i>finding</i> the limits of validity,
             and seeing what happens when you exceed them,
             especially inducing specific unintended behaviors
             without making the system crash.&nbsp;
-            However, PBT is for when you <i>know</i> the limits of validity
+            However, property-based testing is for
+            when you <i>know</i> the limits of validity
             (or at least you think you do),
             and you want to verify that the output is correct
             for all valid inputs --
@@ -356,6 +361,8 @@ That . . .
             mainly integer overflow, or underflow,
             such as by multiplying two numbers
             that are each at least a few billion.&nbsp;
+            If they're both beyond the range of <i>32</i>-bit numbers,
+            their product will be beyond the range of <i>64</i> bit numbers.
 
             <br><br>
 
@@ -413,9 +420,17 @@ of 5?     N| Fizz     | x    |
             If they say the wrong thing, they're out of the game.&nbsp;
             Is that clear enough?<br><br>
 
+            This is often used as a basic filter in hiring developers.&nbsp;
+            If you can't quickly whip up an implementation of FizzBuzz,
+            the thinking goes that
+            you probably don't really now how to program,
+            or you perform very poorly under pressure,
+            or of course maybe you're not at all familiar with FizzBuzz.<br><br>
+
             So let's look at how we would <i>usually</i> test
             an implementation of this,
-            by writing example tests looking for
+            by writing <i>example</i>-based tests,
+            each looking for
             the correct response for a given input number.&nbsp;
             The typical path would be to test 3, 5, 15,
             and some number that’s not a multiple of 3 nor 5,
@@ -503,9 +518,11 @@ end
             The second partner then writes a test,
             for the first one to make pass,
             with the simplest possible code.&nbsp;
-            And so on, back and forth, until all tasks are implemented.&nbsp;
-            One particular variety of ping-pong pair programming is
-            <i>Smart-Ass</i> Ping Pong Pair Programming,
+            And so on, back and forth, until
+            all aspects of the current task are implemented.&nbsp;
+            One particular variety of ping-pong pair programming,
+            one not usually practiced in industry but rather as fun practice,
+            is <i>Smart-Ass</i> Ping Pong Pair Programming,
             in which each partner tries to avoid
             <i>actually implementing</i> the feature correctly,
             making the other person do that work.&nbsp;
@@ -545,7 +562,7 @@ end
             all of them are either multiples of three but not five,
             the other way around, both, or neither.&nbsp;
             We can write <i>just one test</i> for each of these four cases,
-            let our PBT framework create random inputs,
+            let our PBT tool create random inputs,
             let it run for some reasonable amount of
             time or iterations or whatever,
             and have very strong confidence that we've
@@ -560,7 +577,7 @@ end
             not just one number,
             especially without violating the testing principle of
             "one assertion per test"?&nbsp;
-            With most property-based testing frameworks, it's very similar to
+            With most property-based testing tools , it's very similar to
             . . .
           </aside>
         </section>
@@ -596,7 +613,7 @@ end
             . . . we usually call a generator to get the number
             (and we'll talk soon about those).&nbsp;
             The other main difference is that there is usually some way to
-            tell the framework how long to keep running the test,
+            tell the tool how long to keep running the test,
             such as a number of milliseconds, or iterations, or whatever.<br><br>
 
             So what's . . .
@@ -1045,7 +1062,7 @@ end
             We get a result from the one we know works,
             and see if the new one comes up with the same answer.<br><br>
 
-            Now, do you really need a PBT
+            Now, do you really need a property-based testing
           </aside>
         </section>
 
@@ -1053,11 +1070,13 @@ end
           <div class="centering"><img src="images/tools.webp"></div>
           <span class="slide-caption">Image: https://easy-peasy.ai/ai-image-generator/images/electrician-toolkit-20-essential-tools-hd</span>
           <aside class="notes">
-            tool to do this?&nbsp;
-            For some things, it makes the setup easier,
+            <i>tool</i> to do this?&nbsp;
+            It makes the setup easier,
             but any decently experienced programmer should be able to
             write that from scratch,
-            maybe even make their own framework for it.&nbsp;
+            maybe even make their own framework or library for it,
+            so it becomes a tradeoff,
+            based mostly on how much of it you're doing.&nbsp;
             For instance,
           </aside>
         </section>
@@ -1107,13 +1126,13 @@ end
             in this case a fraction of a second.&nbsp;
             And you could certainly use both constraints at once.&nbsp;
             While it's clearly <i>possible</i> to do all this
-            without a PBT framework,
+            without a PBT tool,
             at least using one would make it <i>easier</i> to write,
             and probably <i>clearer</i> for
             whoever has to <i>maintain</i> your test suite.&nbsp;
             (Keep in mind, that may well be "future you"!)<br><br>
 
-            However, the real magic of a property-based testing framework is in
+            However, the real magic of a property-based testing tool is in
             something much more difficult, called “shrinking”.&nbsp;
             Not quite all tools do this, but the idea is
             to find the edges,
@@ -1259,7 +1278,7 @@ end
             when Koen Claessen and John Hughes
             developed a tool called QuickCheck,
             for the Haskell programming language.&nbsp;
-            Not only was this the first major PBT tool,
+            Not only was this the first major property-based testing tool,
             but it was also the origin of the idea of shrinking.<br><br>
 
             Even so, it didn't penetrate the mainstream much until about 2015,
