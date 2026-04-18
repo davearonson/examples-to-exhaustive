@@ -313,7 +313,13 @@ end
           <img src="images/dice.jpg">
           <span class="slide-caption">Image: https://pxhere.com/en/photo/615255</span>
           <aside class="notes">
-            . . . randomly generate lots of inputs, and examine the outputs.&nbsp;
+            . . . randomly generate lots of inputs, and examine the outputs.
+            <br><br>
+
+            Now for a slight detour,
+            and we'll be taking many of those
+            over the course of this talk.<br><br>
+
             Those of you who have done much work in the security space
             might be thinking it sounds somewhat like . . .
           </aside>
@@ -329,18 +335,35 @@ end
             In fact, the core of one of the major PBT tools, Hypothesis,
             is a fuzzing library, Conjecture.&nbsp;
             The difference is mainly in the <i>intent</i>.&nbsp;
-            Fuzzing is mainly for <i>finding</i> the limits of validity,
-            and seeing what happens when we exceed them,
+            Fuzzing is mainly for <i>finding</i> the limits of validity.&nbsp;
+            Often, we don't know the limits because
+            it's someone else's program,
+            and we don't havet the source code.&nbsp;
+            So fuzzing is generally considered a
+            <i>black</i>-box type of testing.&nbsp;
+            In addition to <i>finding</i> those limits,
+            we want to see what happens when we <i>exceed</i> them,
             especially inducing specific unintended behaviors
             without making the system crash.&nbsp;
-            However, property-based testing is for
+            In other words, finding security vulnerabilities,
+            maybe to patch them or maybe to exploit them.&nbsp;
+            On the other claw, property-based testing is for
             when we <i>know</i> the limits of validity
-            (or at least we think we do),
-            and we want to verify that the output is correct
+            (or at least we think we do).&nbsp;
+            And we usually know them because we wrote the system under test,
+            and are using that knowledge,
+            making property-based testing usually a
+            <i>white</i>-box type of testing.&nbsp;
+            The limits of validity are important because
+            we want to verify that the output is correct
             for all valid inputs --
-            or at least as many of them as we can reasonably sample.
+            or at least as many of them as we can reasonably sample.&nbsp;
+            We don't usually care about <i>in</i>valid inputs,
+            except if we want to test that the system doesn't blow up,
+            or maybe that it returns some kind of error code or message.
+            <br><br>
 
-That . . .
+            But back to focusing on PBT, that . . .
           </aside>
         </section>
 
@@ -372,11 +395,7 @@ That . . .
             It should work fine with numbers that humans are likely to use,
             up to maybe hundreds or thousands.&nbsp;
             However, it’s quite easy to create a bug in that sort of situation,
-            mainly integer overflow, or underflow,
-            such as by multiplying two numbers
-            that are each at least a few billion.&nbsp;
-            If they're both beyond the range of <i>32</i>-bit numbers,
-            their product will be beyond the range of <i>64</i> bit numbers.
+            mainly integer overflow.
 
             <br><br>
 
@@ -406,7 +425,7 @@ That . . .
         <section>
           <div class="centering" style="font-size: 2em">
             <pre>
-Is x a . . .  multiple of 3?
+Is x a:       multiple of 3?
            _____<u>Y</u>_________<u>N</u>___
 multiple  Y| FizzBuzz | Buzz |
 of 5?     N| Fizz     | x    |
@@ -414,25 +433,21 @@ of 5?     N| Fizz     | x    |
           </div>
           <aside class="notes">
             . . . FizzBuzz.&nbsp;
-            Does anybody need an explanation of FizzBuzz?<br><br>
-
-            (IF ANYBODY:)
-            I'm not sure how common this is over here,
-            but at least in the USA,
+            In case anybody's not already familiar with FizzBuzz,
             this is a children's game,
             used in schools, to drill the idea of multiples.&nbsp;
             It starts at 1, usually up to 100,
             or until only one child remains in the game.&nbsp;
-            Each child in turn says the right thing,
-            as outlined in this table.&nbsp;
+            Each child in turn counts the next number,
+            but they don't always say the number itself.&nbsp;
             If the number is a multiple of three but not five,
             they say Fizz instead of the number.&nbsp;
             If it's a multiple of five but not three, they say Buzz.&nbsp;
             If it's a multiple of both, they say FizzBuzz.&nbsp;
-            If it's not a multiple of either, they say the number.&nbsp;
+            If it's not a multiple of either,
+            then they finally say the number.&nbsp;
             So it should start 1, 2, Fizz, 4, Buzz, Fizz, 7, and so on.
-            If they say the wrong thing, they're out of the game.&nbsp;
-            Is that clear enough?<br><br>
+            If they say the wrong thing, they're out of the game.<br><br>
 
             This is often used as a basic filter in hiring developers.&nbsp;
             If we can't quickly whip up an implementation of FizzBuzz,
@@ -443,9 +458,9 @@ of 5?     N| Fizz     | x    |
 
             So let's look at how we would <i>usually</i> test
             an implementation of this,
-            by writing <i>example</i>-based tests,
-            each looking for
-            the correct response for a given input number.&nbsp;
+            by writing <i>example</i>-based tests.&nbsp;
+            Each test would look for
+            the correct response for a specific input number.&nbsp;
             The typical path would be to test 3, 5, 15,
             and some number that’s not a multiple of 3 nor 5,
             let's . . .
@@ -458,7 +473,9 @@ of 5?     N| Fizz     | x    |
           </div>
           <span class="slide-caption">Image: https://xkcd.com/221/</span>
           <aside class="notes">
-            . . . randomly pick 4, and call it a day.&nbsp;
+            . . . randomly pick 4.&nbsp;
+            After writing tests for those cases,
+            most would call it a day.&nbsp;
             But I’m sure we can all think of easy implementations that would
             give the correct answer for those numbers,
             but not necessarily for any others, like . . .
@@ -482,7 +499,7 @@ end
             For our carefully chosen examples,
             sure it returns the correct response . . .
             but for anything else, literally garbage.&nbsp;
-            Or maybe we’d get a bit more complex,
+            Maybe we’d get a bit more complex,
             and also test another set, like 6, 10, 30, and 8.&nbsp;
           </aside>
         </section>
@@ -520,6 +537,9 @@ end
           <aside class="notes">
             Smart-Ass Ping-Pong Pair Programming.&nbsp;
             What's that, you might be wondering?&nbsp;
+            Yes, it's an excuse for another detour,
+            or side quest if you prefer.<br><br>
+
             I'll assume, despite what happens then,
             that you're familiar with the concepts of
             pair programming and test-driven development.&nbsp;
@@ -538,6 +558,7 @@ end
             all aspects of the current task are implemented.&nbsp;
             One particular variety of ping-pong pair programming,
             one not usually practiced in industry but rather as fun practice,
+            such as at code retreats,
             is <i>Smart-Ass</i> Ping Pong Pair Programming,
             in which each partner tries to avoid
             <i>actually implementing</i> the feature correctly,
@@ -570,14 +591,55 @@ end
             it gives correct answers for <i>all</i> valid inputs.&nbsp;
             (Or at least, as many as we want to let it test,
             within constraints such as time, CPU cycles, etc.)&nbsp;
-            It would be great if we could divide that input space
-            into easily described sets.&nbsp;
-            Well, we can, just as I did five slides ago!&nbsp;
-            The usual valid range of inputs is integers from 1 to 100,
-            but even expanding it to <i>all</i> integers, even negative ones,
-            all of them are either multiples of three but not five,
-            the other way around, both, or neither.&nbsp;
-            We can write <i>just one test</i> for each of these four cases,
+            We <i>could</i> skip to writing just one test like
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 1.5em">
+            <pre><code class="language-ruby">
+def test_any_fizzbuzz
+  n = rand(MAXINT)
+  is_3 = n % 3 == 0
+  is_5 = n % 5 == 0
+  cond
+    is_3 && is_5: expected = "FizzBuzz"
+    is_3:         expected = "Fizz"
+    is_5:         expected = "Buzz"
+    else:         expected = n.to_string()
+  end
+  assert(fizzbuzz(n) == expected)
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            this, but
+            that's a serious test smell,
+            of duplicating the system under test.&nbsp;
+            We're not sure it's implemented quite like this,
+            but that's a perfectly reasonable implementation.&nbsp;
+            What we want to do instead is
+            divide the input space into easily described cases,
+            and that cond statement up there shows us
+            a set of four cases we can use.
+            It's basically just an encoding of
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 2em">
+            <pre>
+Is x a:       multiple of 3?
+           _____<u>Y</u>_________<u>N</u>___
+multiple  Y| FizzBuzz | Buzz |
+of 5?     N| Fizz     | x    |
+            </pre>
+          </div>
+          <aside class="notes">
+            the table from six slides ago.<br><br>
+
+            Then we can write <i>just one test</i> for
+            each of these four cases,
             let our PBT tool create random inputs,
             let it run for some reasonable amount of
             time or iterations or whatever,
@@ -586,10 +648,29 @@ end
             enough to have strong confidence in
             the correctness of our code.&nbsp;
             That's already only half the number of tests that
-            we would have written for <i>this</i> implementation,
-            without putting much of a serious dent in the input space.
+            we would have written for
+          </aside>
+        </section>
 
-            So how <i>do</i> we write a test for such an entire <i>case</i>,
+        <section>
+          <div class="centering" style="font-size: 2em">
+            <pre><code class="language-ruby">
+case number
+  when  3,  6 then "Fizz"
+  when  4,  8 then "4"
+  when  5, 10 then "Buzz"
+  when 15, 30 then "FizzBuzz"
+  else             "Garbage!"
+end
+            </code></pre>
+          </div>
+          <aside class="notes">
+            <i>this</i> implementation,
+            without putting much of a serious dent in the input space.
+            <br><br>
+
+            So how <i>do</i> we write a test for
+            an entire <i>case</i>,
             not just one number,
             especially without violating the testing principle of
             "one assertion per test"?&nbsp;
@@ -615,7 +696,7 @@ end
         </section>
 
         <section>
-          <div class="centering" style="font-size: 1.5em">
+          <div class="centering" style="font-size: 1.8em">
             <pre><code class="language-ruby">
 def test_mult_of_3_not_5_is_fizz
   number = generate_mult_of_3_not_5()
@@ -630,7 +711,10 @@ end
             (and we'll talk soon about those).&nbsp;
             The other main difference is that there is usually some way to
             tell the tool how long to keep running the test,
-            such as a number of milliseconds, or iterations, or whatever.<br><br>
+            such as a number of milliseconds, or iterations, or whatever.&nbsp;
+            But that's usually a trivial detail,
+            and exactly how it's done varies widely,
+            so I'm just going to handwave over that.<br><br>
 
             So what's . . .
           </aside>
@@ -645,12 +729,12 @@ end
             . . . a generator?&nbsp;
             A generator is a function to
             randomly generate valid test data.&nbsp;
-            They can be as simple as
+            It can be as simple as
             calling a random-number function each time,
-            or they can get more complex, doing things like
+            or it can get more complex, doing things like
             keeping track of what's already been covered,
             so that the next call can go into uncharted territory.&nbsp;
-            They can be primitives like in this case,
+            The data can be primitives like in this case,
             slightly more complex things like lists,
             or even custom things, such as
             objects (or records or maps or whatever our language calls them).&nbsp;
@@ -689,14 +773,20 @@ end
             and their effectiveness.&nbsp;
             For instance, if we're testing a name capitalization function,
             using a random string generator
-            won't be as good as a generator aimed at realistic names.&nbsp;
-            Our tool may provide such a thing,
+            won't be as good as a generator aimed at realistic names,
+            including accents, middle names, middle initials,
+            multiple middle whatevers,
+            apostrophes,
+            name parts that have multiple words
+            (like the German "Von und zu"), and so on.&nbsp;
+            Our property-based testing tool may provide such a thing,
             or something usable that way with certain arguments,
             but we may have to write one ourselves.<br><br>
 
             Most of the tools supply a few kinds of generators,
             and some of them have very flexible ones,
-            for which the call might look more like this:
+            for which the call for a Fizzbuzz input number
+            might look more like this:
           </aside>
         </section>
 
@@ -724,7 +814,7 @@ generate_integer(min: 1,
         </section>
 
         <section>
-          <div class="centering" style="font-size: 1.5em">
+          <div class="centering" style="font-size: 1.8em">
             <pre><code class="language-ruby">
 def test_mult_of_3_not_5_is_fizz
   number = generate_mult_of_3_not_5()
@@ -752,15 +842,16 @@ end
             This would be an even shorter version of
             the opposite case, multiples of five but not three.&nbsp;
             And as long as I'm exploring slightly different styles,
-            if we're using a more pipeline-oriented language,
-            such as Elixir,
-            that's a handy way to clean up that nested mess,
+            I'll take a very brief detour into
+            using a more pipeline-oriented language,
+            such as Elixir or F#.&nbsp;
+            That's a handy way to clean up that nested mess,
             so it might look something like this:
           </aside>
         </section>
 
         <section>
-          <div class="centering" style="font-size: 1.5em">
+          <div class="centering" style="font-size: 1.8em">
             <pre><code class="language-ruby">
 def test_mult_of_5_not_3_is_buzz do
   generate_mult_of_5_not_3()
@@ -786,7 +877,9 @@ end
             </code></pre>
           </div>
           <aside class="notes">
-            . . . this would be the test for multiples of fifteen.<br><br>
+            . . . this would be the test for multiples of fifteen,
+            shortened somewhat but
+            not to the point of messy deep nesting.<br><br>
 
             In the fourth case though,
           </aside>
@@ -815,17 +908,14 @@ end
             as opposed to
             spending <i>human</i> time writing lots of examples.&nbsp;
             It's a great example of the adage that we should
-            let the computer do the boring grunt work.&nbsp;
+            <i>let the computer</i> do the boring grunt work.&nbsp;
             In this case that boring grunt work is
             just the selection of examples,
             once we've done the brainwork of
             <i>describing</i> the <i>categories</i> of examples,
             and the expected response for each.<br><br>
 
-            Now, this is a very simple set of tests,
-            so much so that one might complain that
-            we’re effectively mimicking the implementation,
-            and that’s a fair accusation.&nbsp;
+            Now, this is a very simple set of tests.&nbsp;
             So now let’s look at something a bit more complex,
             one of the canonical examples in
             introductions to property based testing:
@@ -997,7 +1087,15 @@ end
             "Some things never change" is about
             invariants that are perserved through a transformation.&nbsp;
             For instance, when we sort a list,
-            its size and members are preserved, only their order changes.
+            its size and members are preserved, only their order changes.&nbsp;
+            To test a sorting algorithm,
+            it's not enough to test that
+            the output is sorted,
+            but also that the size and members are unchanged.&nbsp;
+            For instance, if there are three fives in the input,
+            there must be three fives in the output,
+            so we know it hasn't been collapsed down to a unique set
+            or some other such error.
           </aside>
         </section>
 
@@ -1157,8 +1255,9 @@ end
             whoever has to <i>maintain</i> our test suite.&nbsp;
             (Keep in mind, that may well be "future us"!)<br><br>
 
-            However, the real magic of a property-based testing tool is in
-            something much more difficult, called “shrinking”.&nbsp;
+            However, the real magic of
+            most property-based testing <i>tool</i>
+            is in something much more difficult, called “shrinking”.&nbsp;
             Not quite all tools do this, but the idea is
             to find the edges,
             by searching between an input that passes the test,
@@ -1215,7 +1314,8 @@ end
 
             Suppose we've told our tool the input range is
             integers from 1 to 100, and
-            it successfully does 1, and 100, and then tries 50,
+            our tool is pretty smart in trying to explore new territory,
+            so it successfully does 1, and 100, and then tries 50,
             but of course blows up.&nbsp;
             First of course it tells us that,
             and now we know our truly valid input range
@@ -1274,7 +1374,9 @@ end
             the shortest list that makes it fail.&nbsp;
             With an object, it might try to
             leave as many properties as possible empty,
-            or filled in with default values.<br><br>
+            or filled in with default values,
+            and similarly for a function call
+            with multiple arguments.<br><br>
 
             Now that we see how much work this saves us,
             who deserves the
@@ -1447,7 +1549,11 @@ end
             There is also a tool called Antithesis,
             which seems to be sort of
             a cross between a PBT tool and Chaos Monkey,
-            for distributed systems.&nbsp;
+            for property-based testing of distributed systems.
+            <br><br>
+
+            Lastly, if this sort of randomized bug-hunting appeals to you,
+            I also recommend you check out
           </aside>
         </section>
 
@@ -1460,24 +1566,28 @@ end
           </div>
           <span class="slide-caption">Images: https://pixabay.com/en/genetic-modification-mutant-mutation-549889/ and my Tight Genes presentation</span>
           <aside class="notes">
-            Lastly, if this sort of randomized bug-hunting appeals to you,
-            I also recommend you check out
             Mutation Testing, and maybe Genetic Algorithms,
-            two of my other frequent presentation topics.&nbsp;
+            two of my more frequent presentation topics.&nbsp;
             Mutation Testing is somewhat like
             fuzzing our <i>code</i> rather than our <i>data</i>,
             though it's not actually random,
             and shares with Property Based Testing
             the purpose of improving test quality.&nbsp;
-            Genetic Algorithms shares with PBT
+            Some of you may have seen my talk on it
+            at Software Quality Days 2024, here in Vienna.&nbsp;
+            Genetic Algorithms are ways to "evolve"
+            good solutions to a problem,
+            using methods similar to real-world biological evolution,
+            and they share with PBT
             that the concept is based on random data,
             generated to be at least plausible for some given purpose.<br><br>
 
             Now that you know about the powerful technique
             of Property-Based Testing,
-            and probably at least one tool to make it much easier,
-            I encourage you to go try it on your projects --
-            once you get used to thinking about generalities
+            and probably at least one tool to make it much easier
+            in your language of choice,
+            I encourage you to go try it on your projects.&nbsp;
+            Once you get used to thinking about categories of inputs,
             rather than trying to come up with specific examples,
             you'll find you can make your test suite far more exhaustive,
             while actually writing fewer tests yourself.
@@ -1488,12 +1598,11 @@ end
           <div class="centering">
             <div>
               <h1>? ? ?</h1>
-              Any questions?<br><br>
+              <h2>Any questions?</h2>
 
               Dave Aronson<br>
               T.Rex-<script>document.write(new Date().getFullYear())</script>@Codosaur.us<br>
               linkedin.com/in/DaveAronson<br>
-              Slides Repo:<br>
               github.com/DaveAronson/Examples-to-Exhaustive
             </div>
           </div>
