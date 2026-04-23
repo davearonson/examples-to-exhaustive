@@ -2,13 +2,14 @@
 <html lang="en">
   <head>
     <!--
-      NEED TO ADD STUFF; have ~38 mins of mat'l, want 40-45!
+      Currently ~47 mins w/ some stumbles and ad-libs;
+      want 40-45; clear those out and you're probably on target.
 
       More ideas:
 
       * Add stuff re passing a property to a generic checker, as in
-      https://www.slideshare.net/slideshow/an-introduction-to-property-based-testing/49224559
-      (including automatic use of correct generator)
+        https://www.slideshare.net/slideshow/an-introduction-to-property-based-testing/49224559
+        (including automatic use of correct generator)
 
       * Common pitfalls and how to avoid them:
 
@@ -313,11 +314,20 @@ end
           <img src="images/dice.jpg">
           <span class="slide-caption">Image: https://pxhere.com/en/photo/615255</span>
           <aside class="notes">
-            . . . randomly generate lots of inputs, and examine the outputs.
+            . . . randomly generate lots of inputs,
+            and examine the outputs.&nbsp;
+            How many input and outputs, you may wonder?&nbsp;
+            As many as we want to let it test,
+            within constraints such as time, CPU cycles, etc.&nbsp;
+            We might give it a length of clock time it can use,
+            or some measure of CPU cycles or CPU time,
+            or a number of iterations.&nbsp;
+            This is usually configurable down to the individual test,
+            with defaults provided at some higher level.
             <br><br>
 
             Now for a slight detour,
-            and we'll be taking many of those
+            and we'll be taking a few more
             over the course of this talk.<br><br>
 
             Those of you who have done much work in the security space
@@ -335,23 +345,21 @@ end
             In fact, the core of one of the major PBT tools, Hypothesis,
             is a fuzzing library, Conjecture.&nbsp;
             The difference is mainly in the <i>intent</i>.&nbsp;
-            Fuzzing is mainly for <i>finding</i> the limits of validity.&nbsp;
+            Fuzzing is mainly for <i>finding</i> the limits of validity,
+            and seeing what happens when we exceed them.&nbsp;
             Often, we don't know the limits because
             it's someone else's program,
-            and we don't havet the source code.&nbsp;
+            and we don't have the source code,
+            so we're sending input to the the program as a whole.&nbsp;
             So fuzzing is generally considered a
             <i>black</i>-box type of testing.&nbsp;
-            In addition to <i>finding</i> those limits,
-            we want to see what happens when we <i>exceed</i> them,
-            especially inducing specific unintended behaviors
-            without making the system crash.&nbsp;
-            In other words, finding security vulnerabilities,
-            maybe to patch them or maybe to exploit them.&nbsp;
             On the other claw, property-based testing is for
-            when we <i>know</i> the limits of validity
+            when we <i>do</i> know the limits of validity
             (or at least we think we do).&nbsp;
-            And we usually know them because we wrote the system under test,
+            And we usually know them because
+            we wrote the system under test,
             and are using that knowledge,
+            sending input to a specific <i>function</i>,
             making property-based testing usually a
             <i>white</i>-box type of testing.&nbsp;
             The limits of validity are important because
@@ -359,7 +367,8 @@ end
             for all valid inputs --
             or at least as many of them as we can reasonably sample.&nbsp;
             We don't usually care about <i>in</i>valid inputs,
-            except if we want to test that the system doesn't blow up,
+            except that we may want to test that
+            the system doesn't blow up,
             or maybe that it returns some kind of error code or message.
             <br><br>
 
@@ -395,7 +404,11 @@ end
             It should work fine with numbers that humans are likely to use,
             up to maybe hundreds or thousands.&nbsp;
             However, it’s quite easy to create a bug in that sort of situation,
-            mainly integer overflow.
+            mainly integer overflow.&nbsp;
+            Multipling six times seven (DO HAND GESTURE), no problem.&nbsp;
+            Multipling that many thousand or million, still no problem.&nbsp;
+            But multiplying six <i>billion</i> by seven billion,
+            exceeds the 64 bit range.
 
             <br><br>
 
@@ -433,28 +446,89 @@ of 5?     N| Fizz     | x    |
           </div>
           <aside class="notes">
             . . . FizzBuzz.&nbsp;
-            In case anybody's not already familiar with FizzBuzz,
-            this is a children's game,
-            used in schools, to drill the idea of multiples.&nbsp;
-            It starts at 1, usually up to 100,
-            or until only one child remains in the game.&nbsp;
-            Each child in turn counts the next number,
-            but they don't always say the number itself.&nbsp;
-            If the number is a multiple of three but not five,
-            they say Fizz instead of the number.&nbsp;
-            If it's a multiple of five but not three, they say Buzz.&nbsp;
-            If it's a multiple of both, they say FizzBuzz.&nbsp;
-            If it's not a multiple of either,
-            then they finally say the number.&nbsp;
-            So it should start 1, 2, Fizz, 4, Buzz, Fizz, 7, and so on.
-            If they say the wrong thing, they're out of the game.<br><br>
+            I don't know how common this is over here,
+            especially its use as a developer hiring filter,
+            but if you're not familiar with it,
+            the basic idea is that it's a children's counting game,
+            used in schools to drill the idea of multiples.&nbsp;
+            For each number,
+            if the number is
+          </aside>
+        </section>
 
-            This is often used as a basic filter in hiring developers.&nbsp;
-            If we can't quickly whip up an implementation of FizzBuzz,
-            the thinking goes that
-            we probably don't really now how to program very well --
-            or maybe we perform very poorly under pressure,
-            or of course maybe we're not at all familiar with FizzBuzz.<br><br>
+        <section>
+          <div class="centering" style="font-size: 2em">
+            <pre>
+Is x a:       multiple of 3?
+           _____<u>Y</u>_________<u>N</u>___
+multiple  Y| FizzBuzz | Buzz |
+of 5?     N| <b>Fizz</b>     | x    |
+            </pre>
+          </div>
+          <aside class="notes">
+            a multiple of three but not five,
+            they say "Fizz" instead of the number,
+            if it's the other way around,
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 2em">
+            <pre>
+Is x a:       multiple of 3?
+           _____<u>Y</u>_________<u>N</u>___
+multiple  Y| FizzBuzz | <b>Buzz</b> |
+of 5?     N| Fizz     | x    |
+            </pre>
+          </div>
+          <aside class="notes">
+            they say "Buzz",
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 2em">
+            <pre>
+Is x a:       multiple of 3?
+           _____<u>Y</u>_________<u>N</u>___
+multiple  Y| <b>FizzBuzz</b> | Buzz |
+of 5?     N| Fizz     | x    |
+            </pre>
+          </div>
+          <aside class="notes">
+            if it's a multiple of both they say "FizzBuzz",
+            and 
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 2em">
+            <pre>
+Is x a:       multiple of 3?
+           _____<u>Y</u>_________<u>N</u>___
+multiple  Y| FizzBuzz | Buzz |
+of 5?     N| Fizz     | <b>x</b>    |
+            </pre>
+          </div>
+          <aside class="notes">
+            if it's neither,
+            then they finally get to say the actual number.&nbsp;
+            So it should start
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: 3em">
+            <pre>
+1: 1    |  6: Fizz
+2: 2    |  7: 7
+3: Fizz |  8: 8
+4: 4    |  9: Fizz
+5: Buzz | 10: Buzz
+            </pre>
+          </div>
+          <aside class="notes">
+            1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, and so on.<br><br>
 
             So let's look at how we would <i>usually</i> test
             an implementation of this,
@@ -519,11 +593,15 @@ end
           <aside class="notes">
             The same idea applies,
             no matter <i>what</i> small set of numbers we pick!&nbsp;
+            <!--
             This sort of approach may look familiar to those of you
             familiar with
+            -->
+            What we really want to do is test that
           </aside>
         </section>
 
+        <!--
         <section>
           <div class="centering">
             <div style="display: flex; justify-content: space-around">
@@ -579,6 +657,7 @@ end
             what we really want to do is test that
           </aside>
         </section>
+        -->
 
         <section>
           <div class="centering">
@@ -589,8 +668,6 @@ end
           </div>
           <aside class="notes">
             it gives correct answers for <i>all</i> valid inputs.&nbsp;
-            (Or at least, as many as we want to let it test,
-            within constraints such as time, CPU cycles, etc.)&nbsp;
             We <i>could</i> skip to writing just one test like
           </aside>
         </section>
@@ -615,7 +692,8 @@ end
           <aside class="notes">
             this, but
             that's a serious test smell,
-            of duplicating the system under test.&nbsp;
+            of duplicating the system under test,
+            what a friend of mine compares to double entry bookkeeping.&nbsp;
             We're not sure it's implemented quite like this,
             but that's a perfectly reasonable implementation.&nbsp;
             What we want to do instead is
@@ -636,7 +714,7 @@ of 5?     N| Fizz     | x    |
             </pre>
           </div>
           <aside class="notes">
-            the table from six slides ago.<br><br>
+            the table from several previous slides.<br><br>
 
             Then we can write <i>just one test</i> for
             each of these four cases,
@@ -707,15 +785,7 @@ end
             </code></pre>
           </div>
           <aside class="notes">
-            . . . we usually call a generator to get the number
-            (and we'll talk soon about those).&nbsp;
-            The other main difference is that there is usually some way to
-            tell the tool how long to keep running the test,
-            such as a number of milliseconds, or iterations, or whatever.&nbsp;
-            But that's usually a trivial detail,
-            and exactly how it's done varies widely,
-            so I'm just going to handwave over that.<br><br>
-
+            . . . we usually call a generator to get the number.&nbsp;
             So what's . . .
           </aside>
         </section>
@@ -731,14 +801,20 @@ end
             randomly generate valid test data.&nbsp;
             It can be as simple as
             calling a random-number function each time,
-            or it can get more complex, doing things like
-            keeping track of what's already been covered,
-            so that the next call can go into uncharted territory.&nbsp;
+            or it can get more complex.&nbsp;
             The data can be primitives like in this case,
             slightly more complex things like lists,
             or even custom things, such as
-            objects (or records or maps or whatever our language calls them).&nbsp;
-            Usually this is where we would incorporate constraints, such as
+            objects (or records or maps or whatever our language calls them),
+            or lists or trees or other such networks or relationships
+            <i>of</i> custom objects,
+            like a customer with orders that each have line items
+            that point to products and so on.&nbsp;
+            (But don't worry, I'm going to keep these examples simple.)
+            <br><br>
+
+            Usually the generator is where we would incorporate constraints,
+            such as
             "give me an integer, not just any integer, but
             one from 1 to 100, inclusive, that is
             a multiple of three, but not of five".&nbsp;
@@ -763,22 +839,14 @@ end
             </code></pre>
           </div>
           <aside class="notes">
-            There are lots of ways we could implement this,
-            like using a loop instead of recursing until
-            we get a valid answer,
-            and of course I'm omitting keeping track of previous results
-            just to keep it simple.&nbsp;
+            There are many many ways we could implement this.&nbsp;
             The quality of our generator can drastically affect
             the ease of writing our property-based tests,
             and their effectiveness.&nbsp;
             For instance, if we're testing a name capitalization function,
             using a random string generator
             won't be as good as a generator aimed at realistic names,
-            including accents, middle names, middle initials,
-            multiple middle whatevers,
-            apostrophes,
-            name parts that have multiple words
-            (like the German "Von und zu"), and so on.&nbsp;
+            including all the common quirks.&nbsp;
             Our property-based testing tool may provide such a thing,
             or something usable that way with certain arguments,
             but we may have to write one ourselves.<br><br>
@@ -818,79 +886,60 @@ generate_integer(min: 1,
             <pre><code class="language-ruby">
 def test_mult_of_3_not_5_is_fizz
   number = generate_mult_of_3_not_5()
-  assert(fizzbuzz(number) == "Fizz")
+  expected = "Fizz"
+  actual = fizzbuzz(number)
+  assert(actual == expected)
 end
             </code></pre>
           </div>
           <aside class="notes">
-            This is a shortened version of
+            This is a repeat of
             the test that I showed you about four slides back,
             for numbers that are multiples of three but not five.
           </aside>
         </section>
 
         <section>
-          <div class="centering" style="font-size: 1.5em">
+          <div class="centering" style="font-size: 1.8em">
             <pre><code class="language-ruby">
-def test_mult_of_5_not_3_is_buzz
-  assert(fizzbuzz(generate_mult_of_5_not_3())
-    == "Buzz")
+def test_mult_of_5_not_3_is_fizz
+  number = generate_mult_of_5_not_3()
+  expected = "Buzz"
+  actual = fizzbuzz(number)
+  assert(actual == expected)
 end
             </code></pre>
           </div>
           <aside class="notes">
-            This would be an even shorter version of
-            the opposite case, multiples of five but not three.&nbsp;
-            And as long as I'm exploring slightly different styles,
-            I'll take a very brief detour into
-            using a more pipeline-oriented language,
-            such as Elixir or F#.&nbsp;
-            That's a handy way to clean up that nested mess,
-            so it might look something like this:
+            This would be the other way around, and.
           </aside>
         </section>
 
         <section>
           <div class="centering" style="font-size: 1.8em">
             <pre><code class="language-ruby">
-def test_mult_of_5_not_3_is_buzz do
-  generate_mult_of_5_not_3()
-  |> fizzbuzz()
-  |> assert_equals("Buzz")
-end
-            </code></pre>
-          </div>
-          <aside class="notes">
-            But since most languages aren't like that,
-            we'll get back to fairly normal syntax,
-            with which . . .
-          </aside>
-        </section>
-
-        <section>
-          <div class="centering" style="font-size: 1.5em">
-            <pre><code class="language-ruby">
 def test_mult_of_15_is_fizzbuzz
   number = generate_mult_of_15()
-  assert(fizzbuzz(number) == "Fizzbuzz")
+  expected = "FizzBuzz"
+  actual = fizzbuzz(number)
+  assert(actual == expected)
 end
             </code></pre>
           </div>
           <aside class="notes">
-            . . . this would be the test for multiples of fifteen,
-            shortened somewhat but
-            not to the point of messy deep nesting.<br><br>
-
+            . . . this would be for multiples of fifteen.&nbsp;
             In the fourth case though,
           </aside>
         </section>
 
         <section>
-          <div class="centering" style="font-size: 1.5em">
+          <div class="centering" style="font-size: 1.7em">
             <pre><code class="language-ruby">
 def test_mult_of_neither_is_number
-  number = generate_non_mult_of_3_and_5()
-  assert(fizzbuzz(number) == number.to_string)
+  number = generate_non_multiple([3,5])
+  expected = number.to_string()
+  actual = fizzbuzz(number)
+  assert(actual == expected)
 end
             </code></pre>
           </div>
@@ -1088,12 +1137,9 @@ end
             invariants that are perserved through a transformation.&nbsp;
             For instance, when we sort a list,
             its size and members are preserved, only their order changes.&nbsp;
-            To test a sorting algorithm,
-            it's not enough to test that
-            the output is sorted,
-            but also that the size and members are unchanged.&nbsp;
             For instance, if there are three fives in the input,
-            there must be three fives in the output,
+            and ten items in total,
+            there must be three fives and ten items total in the output,
             so we know it hasn't been collapsed down to a unique set
             or some other such error.
           </aside>
@@ -1200,7 +1246,7 @@ end
             maybe even make their own framework or library for it,
             so it becomes a tradeoff,
             based mostly on how much of it we're doing.&nbsp;
-            For instance,
+            As an example of implementing it yourself,
           </aside>
         </section>
 
@@ -1245,8 +1291,7 @@ end
             </code></pre>
           </div>
           <aside class="notes">
-            here it is set to run for some number of seconds,
-            in this case a fraction of a second.&nbsp;
+            here it is set to run for some amount of time.&nbsp;
             And we could certainly use both constraints at once.&nbsp;
             While it's clearly <i>possible</i> to do all this
             without a PBT tool,
@@ -1255,8 +1300,8 @@ end
             whoever has to <i>maintain</i> our test suite.&nbsp;
             (Keep in mind, that may well be "future us"!)<br><br>
 
-            However, the real magic of
-            most property-based testing <i>tool</i>
+            However, the real <i>magic</i> of
+            most property-based testing <i>tools</i>
             is in something much more difficult, called “shrinking”.&nbsp;
             Not quite all tools do this, but the idea is
             to find the edges,
@@ -1285,6 +1330,7 @@ end
             divides it by five,
             rounds to the nearest integer,
             and subtracts ten.&nbsp;
+            (Never mind why, it just makes a convenient example!)&nbsp;
             Our output should be a floating point number in the range -1 to 1,
             but in some range of inputs,
             assuming we haven’t taken steps to avoid it,
@@ -1314,8 +1360,7 @@ end
 
             Suppose we've told our tool the input range is
             integers from 1 to 100, and
-            our tool is pretty smart in trying to explore new territory,
-            so it successfully does 1, and 100, and then tries 50,
+            our tool randomly does 26, 74, and then 50,
             but of course blows up.&nbsp;
             First of course it tells us that,
             and now we know our truly valid input range
@@ -1328,16 +1373,15 @@ end
             that there is probably an edge case, possibly multiple,
             somewhere between 50 and each of those numbers.&nbsp;
             Let's look at it trying to
-            find the edge case between 1 and 50.&nbsp;
+            find the edge case between 26 and 50.&nbsp;
             It will basically do a binary search,
             trying halfway at
           </aside>
         </section>
 
         <section>
-          <div class="centering" style="font-size: 2em">
+          <div class="centering" style="font-size: 3em">
             <pre>
-26 -&gt; -1
 38 -&gt; -1
 44 -&gt; -1
 47 -&gt; -1
@@ -1346,24 +1390,23 @@ end
             </pre>
           </div>
           <aside class="notes">
-            26,
-            the middle of the remainder (so basically 3/4 of the way) at 38,
-            7/8 of the way at 44,
-            15/16 of the way at 47,
-            and finally gets another error, 31/32 of the way up, at 49.&nbsp;
+            38,
+            the middle of the remainder (so basically 3/4 of the way) at 44,
+            7/8 of the way at 47,
+            and finally gets another error, 15/16 of the way up, at 49.&nbsp;
             There's only one number left to investigate
             between success and failure, at 48,
             which gives it another error,
             so now it can report to us
             that it found an edge case between 47 and 48.&nbsp;
-            Most of the tools will also investigate the other side,
+            Then it will also investigate the other side,
             using a similar technique,
             and tell us about the edge between 52 and 53.&nbsp;
             Not only will revealing such failures in testing,
             rather than production,
             save us from outages later, but also,
             having a tool apply this idea of shrinking
-            saves <i>immense</i> amounts of time
+            saves the human labor
             we might otherwise spend
             tracking down exactly where those edge cases lie.<br><br>
 
@@ -1385,7 +1428,7 @@ end
 
         <section>
           <div class="centering">
-            <img src="images/credit-card.png" style="height: 99%">
+            <img src="images/credit-card.png" style="height: 90%">
           </div>
           <span class="slide-caption">Image: https://freesvg.org/credit-card-vector-template</span>
           <aside class="notes">
@@ -1401,14 +1444,16 @@ end
             titled
             "Discovering security and safety flaws using
             property-based testing".&nbsp; -->
-            The idea got a major boost in 1999,
+            The first real-world tool didn't appear until five years later,
+            in 1999,
             when Koen Claessen and John Hughes
             developed a tool called QuickCheck,
             for the Haskell programming language.&nbsp;
             Not only was this the first major property-based testing tool,
             but it was also the origin of the idea of shrinking.<br><br>
 
-            Even so, it didn't penetrate the mainstream much until about 2015,
+            Even so, it still didn't penetrate the mainstream much
+            until about 2015,
             when David MacIver released Hypothesis,
             a PBT library for Python,
             certainly a much more popular language than Haskell!&nbsp;
@@ -1426,7 +1471,7 @@ end
           </div>
           <span class="slide-caption">Image: https://www.flickr.com/photos/sdasmarchives/4590226412</span>
           <aside class="notes">
-            silver bullet?  Of course not -
+            silver bullet?  Of course not --
           </aside>
         </section>
 
@@ -1450,14 +1495,14 @@ end
             Fred Brooks told us back in 1986 that there’s no such thing.&nbsp;
             It’s great for problems where
             valid inputs can be fairly easily defined
-            in such a way that they can be created randomly,
-            and the relationship to the output is easy to check,
+            in such a way that they can easily be created randomly,
+            and the correctness of the output is quick and easy to check,
             but it’s not so great for things with
             heavy side effects or lots of stored state,
             or for very slow operations,
             since the idea is to try it many times with different inputs.&nbsp;
             However, even when dealing with such complex problems,
-            at least some parts can usually be broken down into
+            at least some <i>parts</i> can usually be broken down into
             more suitable ones, with some effort.&nbsp;
             Even then, it doesn't fully <i>replace</i> example-based tests,
             but rather <i>supplements</i> them.&nbsp;
