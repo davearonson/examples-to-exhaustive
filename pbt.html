@@ -2,8 +2,7 @@
 <html lang="en">
   <head>
     <!--
-      Currently ~47 mins w/ some stumbles and ad-libs;
-      want 40-45; clear those out and you're probably on target.
+      NEED MORE MATERIAL; currently ~36 mins, want 40-45!
 
       More ideas:
 
@@ -13,19 +12,8 @@
 
       * Common pitfalls and how to avoid them:
 
-      - performance can suck, so use more on critical code than on trivial
-        code.  the more it should be tested, the more reps/seconds/whatever.
-
       - flaky tests: is the input really valid?  maybe save the seed to reuse,
         or save the input for an example based test (maybe temporary).
-
-      - re-implementing the SUT (double-entry bookkeeping): look instead at
-        invariants, or the inverse, or break it into cases so each test only
-        tests one case, calling a specific generator (or generic w/ specific args).
-
-      - neglecting shrinking: while not part of the defn, most tools do it, so
-        take advantage to find the simplest failing case.  if your tool doesn't
-        do it, try to find one that does.
 
       Need to look at WHY this doesn't render to PDF properly with
       the version of Reveal.JS from 2023-04, nor 2025-03,
@@ -322,7 +310,8 @@ end
             or some measure of CPU cycles or CPU time,
             or a number of iterations.&nbsp;
             This is usually configurable down to the individual test,
-            with defaults provided at some higher level.
+            with defaults provided at some higher level,
+            like the file or the whole test suite.
             <br><br>
 
             Those of you who have done much work in the security space
@@ -408,6 +397,7 @@ end
             <br><br>
 
             By sampling the rest of the range,
+            beyond the tiny slice we humans would probably think of,
             Property-Based Testing can help point out
             how the term "valid input" . . .
           </aside>
@@ -691,9 +681,11 @@ end
             what a friend of mine compares to double entry bookkeeping.&nbsp;
             We're not sure it's implemented quite like this,
             but that's a perfectly reasonable implementation.&nbsp;
-            What we want to do instead is
-            divide the input space into easily described cases,
-            and that cond statement up there shows us
+            There are a number of things we can do instead,
+            like look for invariants, or an inverse operation,
+            or divide the input space into easily described cases.&nbsp;
+            Aha!&nbsp;
+            That cond statement up there shows us
             a set of four cases we can use.
             It's basically just an encoding of
           </aside>
@@ -1202,7 +1194,6 @@ end
             The goal is that the verification is fast enough to use in a test,
             ideally one executed many many times,
             as is very common in property-based testing.
-            
           </aside>
         </section>
 
@@ -1433,14 +1424,14 @@ end
             "Towards a Property-based Testing Environment
             with Applications to Security-Critical Software"
             by George Fink, Calvin Ko, Myla Archer, and Karl Levitt.&nbsp;
-            <!-- The ideas in this paper formed in turn
+            The ideas in this paper formed in turn
             a large part of Fink's PhD dissertation,
             in 1995 at the University of California at Davis,
             titled
             "Discovering security and safety flaws using
-            property-based testing".&nbsp; -->
-            The first real-world tool didn't appear until five years later,
-            in 1999,
+            property-based testing".&nbsp;
+            However, the first real-world tool didn't appear until
+            five years later, in 1999,
             when Koen Claessen and John Hughes
             developed a tool called QuickCheck,
             for the Haskell programming language.&nbsp;
@@ -1448,7 +1439,7 @@ end
             but it was also the origin of the idea of shrinking.<br><br>
 
             Even so, it still didn't penetrate the mainstream much
-            until about 2015,
+            until about sixteen more years later, in 2015,
             when David MacIver released Hypothesis,
             a PBT library for Python,
             certainly a much more popular language than Haskell!&nbsp;
@@ -1515,16 +1506,164 @@ end
           </div>
           <span class="slide-caption">Image: from https://www.partycity.com/boys-dc-comics-adjustable-batman-utility-belt-1015607.html and https://freesvg.org/cartoon-bat</span>
           <aside class="notes">
-            belts,
-            to be used when appropriate.<br><br>
+            belts, to be used when appropriate.<br><br>
 
-            If you’d like to try Property-Based Testing for yourself, here’s a
-
+            So once we've decided that a chunk of <i>code</i>
+            is appropriate for property-based testing,
+            <i>when</i> should we do it?&nbsp;
+            How do we fit this into our
           </aside>
         </section>
 
         <section>
-          <div class="centering" style="font-size: .5em">
+          <div class="all centering" style="font-size: 0.8em">
+            <table>
+              <tr><td></td><td>Claim Ticket and Make Branch</td></tr>
+              <tr><td></td><td>Write Tests</td></tr>
+              <tr><td></td><td>Write Code</td></tr>
+              <tr><td></td><td>Lint?</td></tr>
+              <tr><td></td><td>Refactor?</td></tr>
+              <tr><td></td><td>Create Pull Request</td></tr>
+              <tr><td></td><td>Get PR Approved</td></tr>
+              <tr><td></td><td>Merge PR and Delete Branch</td></tr>
+              <tr><td></td><td>Go Back, Jack, Do It Again</td></tr>
+            </table>
+          </div>
+          <aside class="notes">
+            development process?<br><br>
+
+            That's a bit of a tricky question,
+            because it's a multi-step process.
+            Obviously, writing the tests would go
+            in the
+          </aside>
+        </section>
+
+        <section>
+          <div class="all centering" style="font-size: 0.8em">
+            <table>
+              <tr><td></td><td>Claim Ticket and Make Branch</td></tr>
+              <tr><td>=></td><td>Write Tests</td></tr>
+              <tr><td></td><td>Write Code</td></tr>
+              <tr><td></td><td>Lint?</td></tr>
+              <tr><td></td><td>Refactor?</td></tr>
+              <tr><td></td><td>Create Pull Request</td></tr>
+              <tr><td></td><td>Get PR Approved</td></tr>
+              <tr><td></td><td>Merge PR and Delete Branch</td></tr>
+              <tr><td></td><td>Go Back, Jack, Do It Again</td></tr>
+            </table>
+          </div>
+          <aside class="notes">
+            Write Tests step.&nbsp;
+            But then when do we <i>run</i> them, and for how long?&nbsp;
+            Assuming we're using Test Driven Development, as shown here,
+            we run them
+            just after we
+          </aside>
+        </section>
+
+        <section>
+          <div class="all centering" style="font-size: 0.8em">
+            <table>
+              <tr><td></td><td>Claim Ticket and Make Branch</td></tr>
+              <tr><td></td><td>Write Tests</td></tr>
+              <tr><td>=></td><td>Write Code</td></tr>
+              <tr><td></td><td>Lint?</td></tr>
+              <tr><td></td><td>Refactor?</td></tr>
+              <tr><td></td><td>Create Pull Request</td></tr>
+              <tr><td></td><td>Get PR Approved</td></tr>
+              <tr><td></td><td>Merge PR and Delete Branch</td></tr>
+              <tr><td></td><td>Go Back, Jack, Do It Again</td></tr>
+            </table>
+          </div>
+          <aside class="notes">
+            write a piece of code that we think works,
+            to verify it.&nbsp;
+            If not, we run them after we write them, after the code.&nbsp;
+            Whatever.&nbsp;
+            But letting it run a long time,
+            can ruin our feedback loop!&nbsp;
+            We want to get back to work fast,
+            while the problem at hand is fresh in our minds!&nbsp;
+            Most of the property-based testing tools,
+            just like most example-based ones,
+            will let us run just one file,
+            or maybe just one test,
+            or some tagged subset, such as
+            ones we mark as in-progress,
+            if we're adding tests to an existing file.&nbsp;
+            And, most of them will let us also specify
+            command line parameters to override
+            what's in the tests or the config file
+            about how long to let them run,
+            be it by time or iterations or whatever.&nbsp;
+            If we run it for only a very brief time,
+            that might not be as thorough a sampling of the input space
+            as we might want <i>in the end</i>,
+            but it's still probably enough <i>for now</i>.&nbsp;
+            Even all that command-line stuff will be much faster than
+            taking the time to write
+            an equivalent number of example-based tests,
+            especially if we put it into an alias or a script
+            or some such thing.<br><br>
+
+            Later, when we're ready to
+          </aside>
+        </section>
+
+        <section>
+          <div class="all centering" style="font-size: 0.8em">
+            <table>
+              <tr><td></td><td>Claim Ticket and Make Branch</td></tr>
+              <tr><td></td><td>Write Tests</td></tr>
+              <tr><td></td><td>Write Code</td></tr>
+              <tr><td></td><td>Lint?</td></tr>
+              <tr><td></td><td>Refactor?</td></tr>
+              <tr><td>=></td><td>Create Pull Request</td></tr>
+              <tr><td></td><td>Get PR Approved</td></tr>
+              <tr><td></td><td>Merge PR and Delete Branch</td></tr>
+              <tr><td></td><td>Go Back, Jack, Do It Again</td></tr>
+            </table>
+          </div>
+          <aside class="notes">
+            create the Pull Request,
+            or whatever our dev process calls some similar milestone,
+            we can make a little more sure,
+            and tell it to run them for a little longer,
+            and run the rest of the tests,
+            to make sure we didn't break anything.&nbsp;
+            Then we can remove the in-progress tags on those tests,
+            submit the PR,
+            and ideally it would then go into a CI/CD pipeline.&nbsp;
+            In the pipeline, maybe our default is to run each test
+            for, say, ten iterations.&nbsp;
+            Or maybe we might tag some tests as being highly important,
+            like if they're for
+            critical functionality to get precisely right,
+            or very tricky code,
+            so they get run a <i>hundred</i> times.&nbsp;
+            On the other claw,
+            maybe some are marked as not so important,
+            or maybe fairly important but slow,
+            so they only get run <i>once</i>.&nbsp;
+            These can still get a variety of inputs <i>over time</i>
+            because they will get run because of many different PRs,
+            or any time anybody starts the pipeline going
+            for <i>whatever</i> reason.&nbsp;
+            The point is that at that point,
+            how long we let the test suite run
+            shouldn't be making a significant difference in
+            when a human can receive feedback or get back to work,
+            or when a feature becomes available
+            because of an automated deployment.&nbsp;
+            That's kinda the point of an automated pipeline!<br><br>
+
+            If you’d like to try Property-Based Testing for yourself, here’s a
+          </aside>
+        </section>
+
+        <section>
+          <div class="centering" style="font-size: .6em">
             <table>
               <tr>
                 <td>.NET</td>
