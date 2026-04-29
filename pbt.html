@@ -118,7 +118,7 @@
           </div>
           <span class="slide-caption">Image: standard emoji</span>
           <aside class="notes">
-            So what <i>is</i> Property-Based Testing?&nbsp;
+            So what <i>is</i> Property-Based Testing in the first place?&nbsp;
             You might think it’s the old-fashioned idea that
             one must be . . .
           </aside>
@@ -129,6 +129,7 @@
           <span class="slide-caption">Image: https://www.stockvault.net/photo/253669/election-day-illustration</span>
           <aside class="notes">
             . . . a landowner in order to vote, but no, that’s not it.
+            <br><br>
 
             Property-Based Testing, often shortened to PBT,
             is a technique that lets us stop writing . . .
@@ -253,8 +254,12 @@ end
 . . . a huge number of tests that are
 identical except that
 they test different examples,
-what's usually called <i>example</i>-based testing.&nbsp;
-Instead, in <i>property</i>-based testing, we write . . .
+and <i>maybe</i> expect different results or maybe not.&nbsp;
+This is what's usually called <i>example</i>-based testing,
+and it may be at various levels,
+like unit tests, integration tests, feature tests, and so on.&nbsp;
+<i>Property</i>-based testing can also be done at all those levels.&nbsp;
+The big difference is, property-based testing lets us write . . .
           </aside>
         </section>
 
@@ -290,7 +295,7 @@ end
             many fewer tests than in an example-based approach.&nbsp;
             In fact, sometimes we <i>may</i> be able to
             write just one test.&nbsp;
-            The PBT tool,
+            The property-based testing tool,
             which may be a library or a framework,
             so from here on I'm just going to say tool,
             will . . .
@@ -304,14 +309,15 @@ end
             . . . randomly generate lots of inputs,
             and examine the outputs.&nbsp;
             How many input and outputs, you may wonder?&nbsp;
-            As many as we want to let it test,
+            As many as we want to <i>let</i> it test,
             within constraints such as time, CPU cycles, etc.&nbsp;
             We might give it a length of clock time it can use,
             or some measure of CPU cycles or CPU time,
             or a number of iterations.&nbsp;
             This is usually configurable down to the individual test,
             with defaults provided at some higher level,
-            like the file or the whole test suite.
+            like the file or the whole test suite,
+            or the tool as a whole through a config file.
             <br><br>
 
             Those of you who have done much work in the security space
@@ -326,8 +332,9 @@ end
           <span class="slide-caption">Image: https://www.wannapik.com/vectors/15576</span>
           <aside class="notes">
             . . . “fuzzing”, and yes it’s very similar.&nbsp;
-            In fact, the core of one of the major PBT tools, Hypothesis,
-            is a fuzzing library, Conjecture.&nbsp;
+            In fact, the core of one of the major property-based testing tools,
+            called Hypothesis,
+            is a fuzzing library, called Conjecture.&nbsp;
             The difference is mainly in the <i>intent</i>.&nbsp;
             Fuzzing is mainly for <i>finding</i> the limits of validity,
             and seeing what happens when we exceed them.&nbsp;
@@ -356,7 +363,7 @@ end
             or maybe that it returns some kind of error code or message.
             <br><br>
 
-            But back to focusing on PBT, that . . .
+            But back to focusing on property-based testing, that . . .
           </aside>
         </section>
 
@@ -383,8 +390,8 @@ end
             <br><br>
 
             For instance, suppose some step in our algorithm involves
-            multiplying two input numbers, that could have any 64-bit value,
-            with the result put into another 64-bit number.&nbsp;
+            multiplying two input integers, that could have any 64-bit value,
+            with the result put into another 64-bit integer.&nbsp;
             It should work fine with numbers that humans are likely to use,
             up to maybe hundreds or thousands.&nbsp;
             However, it’s quite easy to create a bug in that sort of situation,
@@ -416,7 +423,7 @@ end
 
             To clarify the idea, let’s try an example.&nbsp;
             Let’s suppose we’re writing tests for
-            everybody's favorite interview whiteboarding classic . . .
+            everybody's favorite interview whiteboard-coding classic . . .
           </aside>
         </section>
 
@@ -452,8 +459,8 @@ of 5?     N| <b>Fizz</b>     | x    |
           </div>
           <aside class="notes">
             a multiple of three but not five,
-            they say "Fizz" instead of the number,
-            if it's the other way around,
+            they say "Fizz" instead of the number.&nbsp;
+            If it's the other way around,
           </aside>
         </section>
 
@@ -467,7 +474,7 @@ of 5?     N| Fizz     | x    |
             </pre>
           </div>
           <aside class="notes">
-            they say "Buzz",
+            they say "Buzz".
           </aside>
         </section>
 
@@ -481,8 +488,8 @@ of 5?     N| Fizz     | x    |
             </pre>
           </div>
           <aside class="notes">
-            if it's a multiple of both they say "FizzBuzz",
-            and 
+            If it's a multiple of both they say "FizzBuzz".&nbsp;
+            And 
           </aside>
         </section>
 
@@ -558,7 +565,7 @@ end
             For our carefully chosen examples,
             sure it returns the correct response . . .
             but for anything else, literally garbage.&nbsp;
-            Maybe we’d get a bit more complex,
+            Maybe we’d be a bit more thorough,
             and also test another set, like 6, 10, 30, and 8.&nbsp;
           </aside>
         </section>
@@ -705,7 +712,7 @@ of 5?     N| Fizz     | x    |
 
             Then we can write <i>just one test</i> for
             each of these four cases,
-            let our PBT tool create random inputs,
+            let our property-based testing tool create random inputs,
             let it run for some reasonable amount of
             time or iterations or whatever,
             and have very strong confidence that we've
@@ -861,7 +868,7 @@ generate_integer(min: 1,
             or whatever else we might want to do
             to make it a bit easier to read or write.<br><br>
 
-            Anyway, we can tell our PBT tool, via each test,
+            Anyway, we can tell our property-based testing tool, via each test,
             the definition of our case, and the proper response.&nbsp;
             In the first three cases, they’re just constant strings,
             so their property-based tests are very simple:
@@ -898,7 +905,7 @@ end
             </code></pre>
           </div>
           <aside class="notes">
-            This would be the other way around, and.
+            This would be the other way around, and
           </aside>
         </section>
 
@@ -1035,7 +1042,7 @@ end
 
             Sometimes it can be hard to find and encapsulate good properties,
             but there are some useful guidelines.&nbsp;
-            Scott Wlaschin made
+            Scott Wlaschin (pronounced "Ve-LAS-chin"?) made
           </aside>
         </section>
 
@@ -1280,7 +1287,7 @@ end
             here it is set to run for some amount of time.&nbsp;
             And we could certainly use both constraints at once.&nbsp;
             While it's clearly <i>possible</i> to do all this
-            without a PBT tool,
+            without a property-based testing tool,
             at least using one would make it <i>easier</i> to write,
             and probably <i>clearer</i> for
             whoever has to <i>maintain</i> our test suite.&nbsp;
@@ -1397,7 +1404,7 @@ end
             tracking down exactly where those edge cases lie.<br><br>
 
             With a more complex input, or set of inputs,
-            a PBT tool will try to simplify it.&nbsp;
+            a property-based testing tool will try to simplify it.&nbsp;
             For instance, if it detected a failure in our sorting algorithm,
             it would try to shrink the input to
             the shortest list that makes it fail.&nbsp;
@@ -1441,9 +1448,10 @@ end
             Even so, it still didn't penetrate the mainstream much
             until about sixteen more years later, in 2015,
             when David MacIver released Hypothesis,
-            a PBT library for Python,
+            a property-based testing library for Python,
             certainly a much more popular language than Haskell!&nbsp;
-            Since then, there has been an explosion of PBT tools
+            Since then, there has been an explosion of
+            property-based testing tools
             for most major programming languages,
             and we'll get to a list later.<br><br>
 
@@ -1727,7 +1735,7 @@ end
             list of tools for some popular languages.&nbsp;
             There is also a tool called Antithesis,
             which seems to be sort of
-            a cross between a PBT tool and Chaos Monkey,
+            a cross between a property-based testing tool and Chaos Monkey,
             for property-based testing of distributed systems.
             <br><br>
 
@@ -1757,7 +1765,7 @@ end
             Genetic Algorithms are ways to "evolve"
             good solutions to a problem,
             using methods similar to real-world biological evolution,
-            and they share with PBT
+            and they share with property-based testing
             that the concept is based on random data,
             generated to be at least plausible for some given purpose.<br><br>
 
