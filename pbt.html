@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <!--
-      MAY NEED MORE MATERIAL; currently ~41 mins, want 40-45!
+      currently ~42 mins (want 35-40 as slot is 45);
+      might want to avoid ad-libs
 
       More ideas:
 
@@ -118,6 +119,7 @@
           </div>
           <span class="slide-caption">Image: standard emoji</span>
           <aside class="notes">
+            <!--
             So what <i>is</i> Property-Based Testing in the first place?&nbsp;
             You might think it’s the old-fashioned idea that
             one must be . . .
@@ -130,9 +132,12 @@
           <aside class="notes">
             . . . a landowner in order to vote, but no, that’s not it.
             <br><br>
+            -->
 
             Property-Based Testing, often shortened to PBT,
-            is a technique that lets us stop writing . . .
+            is a software testing technique
+            (surprise!)
+            that lets us stop writing . . .
           </aside>
         </section>
 
@@ -252,14 +257,14 @@ end
           </div>
           <aside class="notes">
 . . . a huge number of tests that are
-identical except that
+<i>identical</i> except that
 they test different examples,
 and <i>maybe</i> expect different results or maybe not.&nbsp;
-This is what's usually called <i>example</i>-based testing,
-and it may be at various levels,
-like unit tests, integration tests, feature tests, and so on.&nbsp;
-<i>Property</i>-based testing can also be done at all those levels.&nbsp;
-The big difference is, property-based testing lets us write . . .
+That is what's usually called <i>example</i>-based testing,
+what you might recognize from <i>typical</i>
+unit tests, integration tests, feature tests, and so on.&nbsp;
+<i>Property</i>-based testing can also be done at all those levels;
+the big difference is, property-based testing lets us write . . .
           </aside>
         </section>
 
@@ -296,8 +301,7 @@ end
             In fact, sometimes we <i>may</i> be able to
             write just one test.&nbsp;
             The property-based testing tool,
-            which may be a library or a framework,
-            so from here on I'm just going to say tool,
+            generally a library or framework,
             will . . .
           </aside>
         </section>
@@ -307,24 +311,31 @@ end
           <span class="slide-caption">Image: https://pxhere.com/en/photo/615255</span>
           <aside class="notes">
             . . . randomly generate lots of inputs,
-            and examine the outputs.&nbsp;
-            How many input and outputs, you may wonder?&nbsp;
+            and examine the corresponding outputs.&nbsp;
+            How many inputs, you may wonder?&nbsp;
             As many as we want to <i>let</i> it test,
             within constraints such as time, CPU cycles, etc.&nbsp;
             We might give it a length of clock time it can use,
             or some measure of CPU cycles or CPU time,
-            or a number of iterations.&nbsp;
+            or a number of iterations.<!--&nbsp;
             This is usually configurable down to the individual test,
             with defaults provided at some higher level,
             like the file or the whole test suite,
-            or the tool as a whole through a config file.
+            or the tool as a whole through a config file.-->
             <br><br>
+
+            That . . .
+
+            <!--
 
             Those of you who have done much work in the security space
             might be thinking it sounds somewhat like . . .
+            -->
+
           </aside>
         </section>
 
+        <!--
         <section>
           <div class="centering" style="background-color: #8BF; border-radius: 1em; height: 95%">
             <img src="images/fuzzy-dice.png">
@@ -364,8 +375,10 @@ end
             <br><br>
 
             But back to focusing on property-based testing, that . . .
+
           </aside>
         </section>
+            -->
 
         <section>
           <img src="images/reduction.png">
@@ -374,8 +387,22 @@ end
             . . . reduction in the number of tests
             is the main advantage of Property-Based Testing,
             over the standard approach of writing a bunch of examples.
+            <br><br>
 
-            It also reduces implicit human . . .
+            Now you might be reminded of Teamscale's technique of
+            test suite reduction.&nbsp;
+            Did any of you go to their talk Tuesday afternoon?&nbsp;
+            I'm not going to recap their idea,
+            you can talk to them at their booth.&nbsp;
+            Both ideas are about reducing the test suite,
+            but Teamscale's idea is aimed at reducing
+            the <i>clock</i> time and <i>CPU</i> time for
+            running a <i>subset</i> of an <i>exisiting</i> test suite,
+            while Property-Based Testing is aimed at reducing
+            the <i>programmer</i> time involved in
+            <i>writing</i> the test suite in the first place.<br><br>
+
+            Property-Based Testing also reduces implicit human . . .
           </aside>
         </section>
 
@@ -1224,7 +1251,8 @@ end
             We get a result from the one we know works,
             and see if the new one comes up with the same answer.<br><br>
 
-            Now, do we really need a property-based testing
+            Now that we know what property-based testing is,
+            do we really need a . . . 
           </aside>
         </section>
 
@@ -1232,7 +1260,7 @@ end
           <div class="centering"><img src="images/tools.webp"></div>
           <span class="slide-caption">Image: https://easy-peasy.ai/ai-image-generator/images/electrician-toolkit-20-essential-tools-hd</span>
           <aside class="notes">
-            <i>tool</i> to do this?&nbsp;
+            . . . <i>tool</i> to do it?&nbsp;
             It makes the setup easier,
             but any decently experienced programmer should be able to
             write that from scratch,
@@ -1768,17 +1796,21 @@ end
           <aside class="notes">
             Mutation Testing, and maybe Genetic Algorithms,
             two of my more frequent presentation topics.&nbsp;
-            Mutation Testing is somewhat like
+            Mutation Testing is
+            a technique for finding gaps in our test suites,
+            so it shares with Property Based Testing
+            the purpose of improving test quality,
+            plus it can <i>seem</i> random, though it really isn't.&nbsp;
+            <!-- The way it works is somewhat like
             fuzzing our <i>code</i> rather than our <i>data</i>,
-            though it's not actually random,
-            and shares with Property Based Testing
-            the purpose of improving test quality.&nbsp;
+            though it's not actually random.&nbsp; -->
             Some of you may have seen my talk on it
-            at Software Quality Days 2024, here in Vienna.&nbsp;
+            at Software Quality Days 2024,
+            here in Vienna, I think maybe this very room.&nbsp;
             Genetic Algorithms are ways to "evolve"
             good solutions to a problem,
-            using methods similar to real-world biological evolution,
-            and they share with property-based testing
+            using methods similar to real-world biological evolution.&nbsp;
+            They share with property-based testing
             that the concept is based on random data,
             generated to be at least plausible for some given purpose.<br><br>
 
@@ -1807,6 +1839,12 @@ end
             </div>
           </div>
           <aside class="notes">
+            (AFTER ALL QUESTIONS)<br>
+            Please remember to send in your feedback,
+            and if you give me anything but the top rating,
+            I only ask that you <i>tell me</i>
+            what could be improved in this presentation,
+            and ideally how.
           </aside>
         </section>
       </div>
